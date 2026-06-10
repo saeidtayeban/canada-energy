@@ -3,7 +3,7 @@
 > A 4-chapter data analysis portfolio grounded in real infrastructure:
 > power grids, vehicles, and cities. Built with Python and public Canadian government data.
 
-**[→ View Chapter 1 Interactive Report](https://saeidtayeban.github.io/canada-energy)**
+**[→ View Chapter 1 Interactive Report]([https://saeidtayeban.github.io/canada-energy](https://saeidtayeban.github.io/canada-energy/canada_energy_chapter1.html.)**
 
 ---
 
