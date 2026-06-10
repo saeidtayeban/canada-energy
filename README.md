@@ -167,6 +167,8 @@ python scripts/03_eda.py
 | [Statistics Canada Table 25-10-0015-01](https://www150.statcan.gc.ca/t1/tbl1/en/dtbl!25-10-0015-01) | `2510001501-eng.csv` | Monthly electricity generation by type and province, 2008–present |
 | [NRCan Comprehensive Energy Use Database](https://oee.nrcan.gc.ca/corporate/statistics/neud/dpa/menus/trends/comprehensive_tables/list.cfm) | `HB2023e.xls` | Transportation energy use, GHG, intensity by mode, 2000–2023 |
 
+Full source notes and format quirks: [`docs/data-sources.md`](docs/data-sources.md)
+
 ---
 
 ## Tools
