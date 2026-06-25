@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Canada Energy — Chapter 3: AI Grid Optimization | Saeid Tayeban</title>
+<style>
+  /* ── Reset & base ─────────────────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg-0:     #07090f;
+    --bg-1:     #0d1221;
+    --bg-2:     #121929;
+    --bg-3:     #1a2235;
+    --bg-card:  #151e30;
+    --teal:     #00d4aa;
+    --teal-dim: #00a882;
+    --teal-glow:#00d4aa22;
+    --amber:    #f59e0b;
+    --amber-dim:#d97706;
+    --red:      #ef4444;
+    --blue:     #3b82f6;
+    --text-0:   #f0f4ff;
+    --text-1:   #a8b4cc;
+    --text-2:   #6b7a96;
+    --border:   #1e2d45;
+    --border-2: #2a3d5a;
+    --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg-0);
+    color: var(--text-0);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Typography ───────────────────────────────────────────────────── */
+  h1 { font-size: clamp(2.2rem, 5vw, 3.6rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; }
+  h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); font-weight: 700; letter-spacing: -0.02em; line-height: 1.2; }
+  h3 { font-size: 1.15rem; font-weight: 600; letter-spacing: -0.01em; }
+  p  { color: var(--text-1); max-width: 68ch; }
+  a  { color: var(--teal); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  em { color: var(--teal); font-style: normal; font-weight: 600; }
+
+  /* ── Layout ───────────────────────────────────────────────────────── */
+  .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+  section { padding: 96px 0; border-top: 1px solid var(--border); }
+  section:first-of-type { border-top: none; }
+
+  /* ── Nav ──────────────────────────────────────────────────────────── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(7, 9, 15, 0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-inner {
+    display: flex; align-items: center; justify-content: space-between;
+    max-width: 900px; margin: 0 auto; padding: 0 24px; height: 52px;
+  }
+  .nav-brand { font-size: 0.8rem; color: var(--text-2); letter-spacing: 0.05em; }
+  .nav-links { display: flex; gap: 20px; list-style: none; }
+  .nav-links a { font-size: 0.8rem; color: var(--text-2); transition: color 0.2s; }
+  .nav-links a:hover { color: var(--teal); text-decoration: none; }
+  .nav-back {
+    font-size: 0.78rem; color: var(--text-2);
+    padding: 4px 10px; border: 1px solid var(--border-2);
+    border-radius: 4px; transition: all 0.2s;
+  }
+  .nav-back:hover { color: var(--teal); border-color: var(--teal); text-decoration: none; }
+
+  /* ── Hero ─────────────────────────────────────────────────────────── */
+  .hero { padding: 100px 0 96px; border-top: none; }
+
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--teal);
+    margin-bottom: 28px;
+  }
+  .hero-eyebrow::before {
+    content: ''; display: block; width: 24px; height: 1px; background: var(--teal);
+  }
+
+  .hero h1 { margin-bottom: 28px; }
+  .hero h1 span { color: var(--teal); display: block; }
+
+  .hero-sub {
+    font-size: 1.05rem; color: var(--text-1); max-width: 62ch;
+    margin-bottom: 56px; line-height: 1.75;
+  }
+
+  /* ── Hero counters ────────────────────────────────────────────────── */
+  .counters {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 2px; border: 1px solid var(--border); border-radius: 10px;
+    overflow: hidden;
+  }
+  .counter {
+    background: var(--bg-card); padding: 28px 24px;
+    position: relative; overflow: hidden;
+  }
+  .counter::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0;
+    height: 2px; background: var(--teal); opacity: 0;
+    transition: opacity 0.4s;
+  }
+  .counter.active::before { opacity: 1; }
+  .counter-value {
+    font-size: 2.2rem; font-weight: 800; letter-spacing: -0.04em;
+    color: var(--teal); line-height: 1; margin-bottom: 8px;
+    font-variant-numeric: tabular-nums;
+  }
+  .counter-label {
+    font-size: 0.78rem; color: var(--text-2); line-height: 1.5;
+  }
+
+  /* ── Dataset band ─────────────────────────────────────────────────── */
+  .dataset-band {
+    background: var(--bg-2); border: 1px solid var(--border);
+    border-radius: 8px; padding: 20px 24px;
+    display: flex; gap: 32px; flex-wrap: wrap;
+    margin-top: 40px;
+  }
+  .ds-item { display: flex; flex-direction: column; gap: 2px; }
+  .ds-label { font-size: 0.7rem; color: var(--text-2); text-transform: uppercase; letter-spacing: 0.08em; }
+  .ds-value { font-size: 0.9rem; font-weight: 600; color: var(--text-0); }
+
+  /* ── Section headers ──────────────────────────────────────────────── */
+  .section-eyebrow {
+    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--teal);
+    margin-bottom: 12px;
+  }
+  .section-header { margin-bottom: 40px; }
+  .section-header h2 { margin-bottom: 16px; }
+
+  /* ── Province contrast ────────────────────────────────────────────── */
+  .province-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 32px; }
+
+  .prov-card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 28px; position: relative; overflow: hidden;
+  }
+  .prov-card::after {
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+    height: 3px;
+  }
+  .prov-card.ontario::after  { background: var(--teal); }
+  .prov-card.alberta::after  { background: var(--amber); }
+
+  .prov-name {
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; margin-bottom: 6px;
+  }
+  .prov-card.ontario  .prov-name { color: var(--teal); }
+  .prov-card.alberta  .prov-name { color: var(--amber); }
+
+  .prov-headline { font-size: 1.6rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 4px; }
+  .prov-sub { font-size: 0.82rem; color: var(--text-2); margin-bottom: 20px; }
+
+  .prov-stats { display: flex; flex-direction: column; gap: 10px; }
+  .prov-stat {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 8px 0; border-bottom: 1px solid var(--border);
+    font-size: 0.82rem;
+  }
+  .prov-stat:last-child { border-bottom: none; }
+  .prov-stat-label { color: var(--text-2); }
+  .prov-stat-value { font-weight: 700; font-size: 0.88rem; }
+  .prov-card.ontario  .prov-stat-value { color: var(--teal); }
+  .prov-card.alberta  .prov-stat-value { color: var(--amber); }
+
+  /* ── Charging method cards ────────────────────────────────────────── */
+  .charging-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 32px; }
+
+  .charge-card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 28px;
+  }
+  .charge-card.dumb  { border-top: 2px solid var(--red); }
+  .charge-card.smart { border-top: 2px solid var(--teal); }
+
+  .charge-label {
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; margin-bottom: 10px;
+  }
+  .charge-card.dumb  .charge-label { color: var(--red); }
+  .charge-card.smart .charge-label { color: var(--teal); }
+
+  .charge-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; }
+  .charge-desc  { font-size: 0.82rem; color: var(--text-2); line-height: 1.6; margin-bottom: 20px; }
+
+  /* 24-hour bar chart */
+  .hour-chart { display: flex; align-items: flex-end; gap: 2px; height: 52px; margin-bottom: 8px; }
+  .hour-bar {
+    flex: 1; border-radius: 2px 2px 0 0; min-height: 2px;
+    transition: height 0.6s ease;
+  }
+  .charge-card.dumb  .hour-bar { background: var(--red); opacity: 0.7; }
+  .charge-card.smart .hour-bar { background: var(--teal); opacity: 0.7; }
+  .hour-axis {
+    display: flex; justify-content: space-between;
+    font-size: 0.62rem; color: var(--text-2); font-family: var(--font-mono);
+    margin-bottom: 16px;
+  }
+
+  /* ── Peak results table ───────────────────────────────────────────── */
+  .results-table {
+    width: 100%; border-collapse: collapse; margin-top: 32px;
+    font-size: 0.84rem;
+  }
+  .results-table thead tr { border-bottom: 2px solid var(--border-2); }
+  .results-table th {
+    text-align: left; padding: 10px 14px;
+    font-size: 0.68rem; font-weight: 600; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-2);
+  }
+  .results-table th:not(:first-child) { text-align: right; }
+  .results-table td { padding: 11px 14px; border-bottom: 1px solid var(--border); }
+  .results-table td:not(:first-child) { text-align: right; font-variant-numeric: tabular-nums; }
+  .results-table tbody tr:hover { background: var(--bg-2); }
+
+  .prov-tag {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-weight: 700; font-size: 0.78rem;
+  }
+  .prov-tag .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+  }
+  .prov-tag.on .dot { background: var(--teal); }
+  .prov-tag.ab .dot { background: var(--amber); }
+
+  .yr { color: var(--text-2); }
+  .mw-add { color: var(--amber); font-weight: 700; }
+  .mw-save { color: var(--teal); font-weight: 700; }
+  .pct-save { color: var(--text-1); }
+
+  /* ── GHG contrast block ───────────────────────────────────────────── */
+  .ghg-contrast {
+    display: grid; grid-template-columns: 1fr auto 1fr;
+    gap: 0; margin-top: 40px; border: 1px solid var(--border);
+    border-radius: 10px; overflow: hidden;
+  }
+  .ghg-side { background: var(--bg-card); padding: 36px 32px; }
+  .ghg-side.ontario { border-right: 1px solid var(--border); }
+  .ghg-divider {
+    background: var(--bg-3); display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 0 20px; gap: 8px;
+  }
+  .ghg-mult {
+    font-size: 2rem; font-weight: 900; color: var(--text-0);
+    letter-spacing: -0.04em;
+  }
+  .ghg-mult-label { font-size: 0.68rem; color: var(--text-2); text-align: center; letter-spacing: 0.06em; text-transform: uppercase; }
+
+  .ghg-prov-label {
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; margin-bottom: 8px;
+  }
+  .ontario .ghg-prov-label { color: var(--teal); }
+  .alberta .ghg-prov-label { color: var(--amber); }
+
+  .ghg-intensity {
+    font-size: 2.4rem; font-weight: 900; letter-spacing: -0.04em;
+    line-height: 1; margin-bottom: 4px;
+  }
+  .ontario .ghg-intensity { color: var(--teal); }
+  .alberta .ghg-intensity { color: var(--amber); }
+
+  .ghg-unit { font-size: 0.78rem; color: var(--text-2); margin-bottom: 20px; }
+  .ghg-source { font-size: 0.8rem; color: var(--text-1); line-height: 1.5; }
+
+  .ghg-avoided {
+    margin-top: 16px; padding: 12px 16px;
+    border-radius: 6px; font-size: 0.82rem;
+  }
+  .ontario .ghg-avoided { background: rgba(0, 212, 170, 0.08); border: 1px solid rgba(0, 212, 170, 0.2); color: var(--teal); }
+  .alberta .ghg-avoided { background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.2); color: var(--amber); }
+
+  /* ── Key insight callout ──────────────────────────────────────────── */
+  .insight-box {
+    background: linear-gradient(135deg, rgba(0,212,170,0.06) 0%, rgba(0,212,170,0.02) 100%);
+    border: 1px solid rgba(0, 212, 170, 0.3);
+    border-radius: 10px; padding: 32px 36px; margin-top: 40px;
+    position: relative; overflow: hidden;
+  }
+  .insight-box::before {
+    content: ''; position: absolute; top: 0; left: 0;
+    width: 3px; height: 100%; background: var(--teal);
+  }
+  .insight-label {
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--teal); margin-bottom: 12px;
+  }
+  .insight-text { font-size: 1.05rem; color: var(--text-0); line-height: 1.75; max-width: none; }
+
+  /* ── Data sources ─────────────────────────────────────────────────── */
+  .sources-row {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+    margin-top: 32px;
+  }
+  .source-card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 8px; padding: 18px 20px;
+  }
+  .source-label {
+    font-size: 0.68rem; color: var(--text-2); text-transform: uppercase;
+    letter-spacing: 0.08em; margin-bottom: 4px;
+  }
+  .source-name { font-size: 0.84rem; font-weight: 600; color: var(--text-0); margin-bottom: 2px; }
+  .source-meta { font-size: 0.76rem; color: var(--text-2); }
+
+  /* ── Tools row ────────────────────────────────────────────────────── */
+  .tools-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+  .tool-tag {
+    font-size: 0.75rem; font-family: var(--font-mono);
+    background: var(--bg-3); border: 1px solid var(--border-2);
+    padding: 4px 10px; border-radius: 4px; color: var(--text-1);
+  }
+
+  /* ── Chapter bridge ───────────────────────────────────────────────── */
+  .bridge-section {
+    background: var(--bg-1); border-top: 1px solid var(--border);
+    padding: 88px 0;
+  }
+  .bridge-eyebrow {
+    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--text-2); margin-bottom: 8px;
+  }
+  .bridge-heading { font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 800; margin-bottom: 20px; }
+  .bridge-heading em { color: var(--teal); font-style: normal; display: block; }
+  .bridge-sub { font-size: 0.95rem; color: var(--text-1); max-width: 58ch; margin-bottom: 32px; }
+
+  .bridge-list { list-style: none; margin-bottom: 36px; display: flex; flex-direction: column; gap: 10px; }
+  .bridge-list li {
+    display: flex; align-items: baseline; gap: 10px;
+    font-size: 0.84rem; color: var(--text-1);
+  }
+  .bridge-list li::before {
+    content: '→'; color: var(--teal); font-weight: 700; flex-shrink: 0;
+  }
+
+  /* ── Chapter map ──────────────────────────────────────────────────── */
+  .chapter-map {
+    display: flex; flex-direction: column; gap: 8px; margin-top: 40px;
+    padding-top: 32px; border-top: 1px solid var(--border);
+  }
+  .ch-row {
+    display: flex; align-items: center; gap: 14px;
+    padding: 10px 14px; border-radius: 6px;
+    font-size: 0.82rem; color: var(--text-2);
+  }
+  .ch-row.current {
+    background: rgba(0, 212, 170, 0.06);
+    border: 1px solid rgba(0, 212, 170, 0.2);
+    color: var(--text-0);
+  }
+  .ch-row.done { color: var(--text-1); }
+  .ch-num {
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em;
+    width: 28px; flex-shrink: 0; font-family: var(--font-mono);
+  }
+  .ch-row.current .ch-num { color: var(--teal); }
+  .ch-row.done .ch-num    { color: var(--teal-dim); }
+  .ch-badge {
+    margin-left: auto; font-size: 0.68rem; padding: 2px 8px;
+    border-radius: 3px;
+  }
+  .badge-done    { background: rgba(0, 212, 170, 0.12); color: var(--teal); }
+  .badge-current { background: rgba(0, 212, 170, 0.12); color: var(--teal); }
+  .badge-planned { background: rgba(107, 122, 150, 0.12); color: var(--text-2); }
+
+  /* ── Footer ───────────────────────────────────────────────────────── */
+  .footer {
+    border-top: 1px solid var(--border); padding: 32px 0;
+    font-size: 0.78rem; color: var(--text-2);
+  }
+  .footer-inner {
+    max-width: 900px; margin: 0 auto; padding: 0 24px;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 12px;
+  }
+  .footer-links { display: flex; gap: 16px; }
+  .footer-links a { color: var(--text-2); font-size: 0.78rem; }
+  .footer-links a:hover { color: var(--teal); }
+
+  /* ── Responsive ───────────────────────────────────────────────────── */
+  @media (max-width: 680px) {
+    .counters       { grid-template-columns: 1fr; }
+    .province-grid  { grid-template-columns: 1fr; }
+    .charging-grid  { grid-template-columns: 1fr; }
+    .sources-row    { grid-template-columns: 1fr; }
+    .ghg-contrast   { grid-template-columns: 1fr; }
+    .ghg-divider    { padding: 20px; flex-direction: row; }
+    .nav-links      { display: none; }
+  }
+
+  /* ── Animations ───────────────────────────────────────────────────── */
+  .fade-in { opacity: 0; transform: translateY(18px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fade-in { opacity: 1; transform: none; transition: none; }
+    * { animation: none !important; }
+  }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- ── Nav ──────────────────────────────────────────────────────────── -->
+<nav>
+  <div class="nav-inner">
+    <span class="nav-brand">Canada Energy / Ch.3</span>
+    <ul class="nav-links">
+      <li><a href="#overview">Overview</a></li>
+      <li><a href="#data">Data</a></li>
+      <li><a href="#charging">Charging</a></li>
+      <li><a href="#results">Results</a></li>
+      <li><a href="#ghg">GHG Impact</a></li>
+      <li><a href="#chapter4">Chapter 4</a></li>
+    </ul>
+    <a href="canada_energy_chapter2.html" class="nav-back">← Ch.2</a>
+  </div>
+</nav>
+
+<!-- ── Hero ─────────────────────────────────────────────────────────── -->
+<section class="hero" id="overview">
+  <div class="container">
+    <div class="hero-eyebrow">Data Analysis Portfolio · Chapter 3 of 4</div>
+    <h1>Can smart charging<br><em>tame the peak?</em></h1>
+    <p class="hero-sub">
+      Chapter 2 mapped where Canada's grid will feel the EV demand shock first.
+      Chapter 3 models the next question: if EVs charge whenever people plug in,
+      how much does the evening peak spike — and how much can intelligent scheduling recover?
+    </p>
+
+    <div class="counters">
+      <div class="counter" id="c1">
+        <div class="counter-value" data-target="110303" data-suffix="" data-format="comma">0</div>
+        <div class="counter-label">Hourly grid records<br>Ontario + Alberta, 2019–2025</div>
+      </div>
+      <div class="counter" id="c2">
+        <div class="counter-value" data-target="16" data-suffix="×">0</div>
+        <div class="counter-label">Alberta's GHG multiplier<br>vs. Ontario per MW peak shifted</div>
+      </div>
+      <div class="counter" id="c3">
+        <div class="counter-value" data-target="100" data-suffix="%">0</div>
+        <div class="counter-label">Of EV-added peak load eliminated<br>by smart charging in Ontario by 2030</div>
+      </div>
+    </div>
+
+    <div class="dataset-band fade-in">
+      <div class="ds-item">
+        <span class="ds-label">Grid source · Ontario</span>
+        <span class="ds-value">IESO — 2019–2025</span>
+      </div>
+      <div class="ds-item">
+        <span class="ds-label">Grid source · Alberta</span>
+        <span class="ds-value">AESO AIL — 2020–2025</span>
+      </div>
+      <div class="ds-item">
+        <span class="ds-label">EV demand model</span>
+        <span class="ds-value">Ch.2 projections, both scenarios</span>
+      </div>
+      <div class="ds-item">
+        <span class="ds-label">Projection horizon</span>
+        <span class="ds-value">2025 · 2028 · 2030 · 2035</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Province contrast ─────────────────────────────────────────────── -->
+<section id="data">
+  <div class="container">
+    <div class="section-header fade-in">
+      <div class="section-eyebrow">Province selection</div>
+      <h2>Two provinces. Maximum contrast.</h2>
+      <p>
+        Ontario and Alberta were chosen because they have the best open hourly
+        grid data in Canada — and because they tell opposite stories. Ontario's
+        nuclear-and-hydro grid is one of the cleanest in North America.
+        Alberta runs on gas and coal. Smart charging has the same operational
+        effect in both provinces. The climate impact is 16× larger in Alberta.
+      </p>
+    </div>
+
+    <div class="province-grid">
+      <div class="prov-card ontario fade-in">
+        <div class="prov-name">Ontario</div>
+        <div class="prov-headline">23,261 MW</div>
+        <div class="prov-sub">Avg top-100 peak demand (2020–2024 baseline)</div>
+        <div class="prov-stats">
+          <div class="prov-stat">
+            <span class="prov-stat-label">Grid source</span>
+            <span class="prov-stat-value">IESO hourly demand</span>
+          </div>
+          <div class="prov-stat">
+            <span class="prov-stat-label">Records</span>
+            <span class="prov-stat-value">61,368 hourly rows</span>
+          </div>
+          <div class="prov-stat">
+            <span class="prov-stat-label">Demand range</span>
+            <span class="prov-stat-value">9,831 → 24,862 MW</span>
+          </div>
+          <div class="prov-stat">
+            <span class="prov-stat-label">GHG intensity</span>
+            <span class="prov-stat-value">30 kg CO₂/MWh</span>
+          </div>
+          <div class="prov-stat">
+            <span class="prov-stat-label">Grid character</span>
+            <span class="prov-stat-value">Nuclear + hydro dominant</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="prov-card alberta fade-in">
+        <div class="prov-name">Alberta</div>
+        <div class="prov-headline">12,030 MW</div>
+        <div class="prov-sub">Avg top-100 peak demand (2020–2024 baseline)</div>
+        <div class="prov-stats">
+          <div class="prov-stat">
+            <span class="prov-stat-label">Grid source</span>
+            <span class="prov-stat-value">AESO Alberta Internal Load</span>
+          </div>
+          <div class="prov-stat">
+            <span class="prov-stat-label">Records</span>
+            <span class="prov-stat-value">48,935 hourly rows</span>
+          </div>
+          <div class="prov-stat">
+            <span class="prov-stat-label">Demand range</span>
+            <span class="prov-stat-value">7,579 → 12,384 MW</span>
+          </div>
+          <div class="prov-stat">
+            <span class="prov-stat-label">GHG intensity</span>
+            <span class="prov-stat-value">490 kg CO₂/MWh</span>
+          </div>
+          <div class="prov-stat">
+            <span class="prov-stat-label">Grid character</span>
+            <span class="prov-stat-value">Gas + coal dominant</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Charging model ─────────────────────────────────────────────────── -->
+<section id="charging">
+  <div class="container">
+    <div class="section-header fade-in">
+      <div class="section-eyebrow">Charging model</div>
+      <h2>Dumb charging creates the problem.<br>Smart charging eliminates it.</h2>
+      <p>
+        The model converts Chapter 2's annual EV demand projections (TWh)
+        into hourly MW load profiles using two charging behaviour assumptions.
+        Light vehicles follow home charging patterns. Heavy freight charges
+        at depots overnight regardless of scenario.
+      </p>
+    </div>
+
+    <div class="charging-grid">
+      <div class="charge-card dumb fade-in">
+        <div class="charge-label">Dumb charging — baseline</div>
+        <div class="charge-title">Plug in when you get home</div>
+        <div class="charge-desc">
+          70% of daily light vehicle energy loads between 5–10pm, mirroring
+          commute return times. 30% charges overnight. This is how most
+          EVs charge today — and it lands directly on top of the existing
+          evening demand peak.
+        </div>
+        <div class="hour-chart" id="dumb-chart"></div>
+        <div class="hour-axis"><span>12am</span><span>6am</span><span>12pm</span><span>6pm</span><span>11pm</span></div>
+        <div style="font-size:0.78rem; color: var(--red);">Evening peak: hours 17–21 carry 70% of daily EV load</div>
+      </div>
+
+      <div class="charge-card smart fade-in">
+        <div class="charge-label">Smart charging — simulated</div>
+        <div class="charge-title">Shift to overnight automatically</div>
+        <div class="charge-desc">
+          100% of light vehicle load shifts to 10pm–6am — same total daily
+          kWh, different clock time. The EV charges while demand is naturally
+          low. Evening peak stress disappears entirely from the light vehicle
+          segment.
+        </div>
+        <div class="hour-chart" id="smart-chart"></div>
+        <div class="hour-axis"><span>12am</span><span>6am</span><span>12pm</span><span>6pm</span><span>11pm</span></div>
+        <div style="font-size:0.78rem; color: var(--teal);">Overnight load: hours 22–06 absorb 100% of light vehicle charging</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Results ───────────────────────────────────────────────────────── -->
+<section id="results">
+  <div class="container">
+    <div class="section-header fade-in">
+      <div class="section-eyebrow">Peak demand model · original scenario</div>
+      <h2>EV adoption raises the peak.<br>Smart charging gives it back.</h2>
+      <p>
+        The model overlays projected EV charging load on the historical grid
+        baseline and identifies the top-100 peak hours per year under each
+        scenario. The delta is the smart charging dividend.
+      </p>
+    </div>
+
+    <div class="fade-in">
+      <table class="results-table">
+        <thead>
+          <tr>
+            <th>Province</th>
+            <th>Year</th>
+            <th>Baseline peak</th>
+            <th>EV adds</th>
+            <th>Smart saves</th>
+            <th>% of EV peak eliminated</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="prov-tag on"><span class="dot"></span>Ontario</span></td>
+            <td class="yr">2025</td>
+            <td>23,261 MW</td>
+            <td class="mw-add">+402 MW</td>
+            <td class="mw-save">402 MW</td>
+            <td class="pct-save">100%</td>
+          </tr>
+          <tr>
+            <td><span class="prov-tag on"><span class="dot"></span>Ontario</span></td>
+            <td class="yr">2028</td>
+            <td>23,261 MW</td>
+            <td class="mw-add">+540 MW</td>
+            <td class="mw-save">540 MW</td>
+            <td class="pct-save">100%</td>
+          </tr>
+          <tr>
+            <td><span class="prov-tag on"><span class="dot"></span>Ontario</span></td>
+            <td class="yr">2030</td>
+            <td>23,261 MW</td>
+            <td class="mw-add">+658 MW</td>
+            <td class="mw-save">658 MW</td>
+            <td class="pct-save">100%</td>
+          </tr>
+          <tr>
+            <td><span class="prov-tag on"><span class="dot"></span>Ontario</span></td>
+            <td class="yr">2035</td>
+            <td>23,261 MW</td>
+            <td class="mw-add">+1,092 MW</td>
+            <td class="mw-save">1,092 MW</td>
+            <td class="pct-save">100%</td>
+          </tr>
+          <tr>
+            <td><span class="prov-tag ab"><span class="dot"></span>Alberta</span></td>
+            <td class="yr">2025</td>
+            <td>12,030 MW</td>
+            <td class="mw-add">+127 MW</td>
+            <td class="mw-save">127 MW</td>
+            <td class="pct-save">100%</td>
+          </tr>
+          <tr>
+            <td><span class="prov-tag ab"><span class="dot"></span>Alberta</span></td>
+            <td class="yr">2028</td>
+            <td>12,030 MW</td>
+            <td class="mw-add">+254 MW</td>
+            <td class="mw-save">253 MW</td>
+            <td class="pct-save">100%</td>
+          </tr>
+          <tr>
+            <td><span class="prov-tag ab"><span class="dot"></span>Alberta</span></td>
+            <td class="yr">2030</td>
+            <td>12,030 MW</td>
+            <td class="mw-add">+405 MW</td>
+            <td class="mw-save">380 MW</td>
+            <td class="pct-save">94%</td>
+          </tr>
+          <tr>
+            <td><span class="prov-tag ab"><span class="dot"></span>Alberta</span></td>
+            <td class="yr">2035</td>
+            <td>12,030 MW</td>
+            <td class="mw-add">+1,175 MW</td>
+            <td class="mw-save">576 MW</td>
+            <td class="pct-save">49%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="insight-box fade-in">
+      <div class="insight-label">Key finding</div>
+      <p class="insight-text">
+        Ontario's smart charging result holds at <em>100% elimination</em> through 2035 —
+        because light vehicle evening load shifts entirely out of the peak window and the
+        overnight grid has capacity to absorb it. Alberta's efficiency drops to
+        <strong style="color:var(--amber)">49% by 2035</strong> as the EV fleet
+        grows large enough to crowd the overnight window itself. Smart charging buys time —
+        but Alberta will need grid investment before 2035 regardless.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ── GHG impact ─────────────────────────────────────────────────────── -->
+<section id="ghg">
+  <div class="container">
+    <div class="section-header fade-in">
+      <div class="section-eyebrow">GHG impact</div>
+      <h2>Same cars. Same behaviour.<br>16× the climate impact in Alberta.</h2>
+      <p>
+        Every megawatt shifted out of peak hours avoids generation from the
+        marginal plant — the one that fires up to meet demand spikes.
+        In Ontario that marginal plant is often gas peaker: ~30 kg CO₂/MWh.
+        In Alberta it's typically coal or gas: ~490 kg CO₂/MWh.
+      </p>
+    </div>
+
+    <div class="ghg-contrast fade-in">
+      <div class="ghg-side ontario">
+        <div class="ghg-prov-label">Ontario</div>
+        <div class="ghg-intensity">30</div>
+        <div class="ghg-unit">kg CO₂ per MWh — grid average</div>
+        <div class="ghg-source">Nuclear and hydro dominate generation. Peak hours are covered largely by gas peakers — low-carbon relative to Alberta's baseload.</div>
+        <div class="ghg-avoided">
+          Smart charging avoids <strong>36,013 t CO₂/year</strong> by 2030
+        </div>
+      </div>
+      <div class="ghg-divider">
+        <div class="ghg-mult">16×</div>
+        <div class="ghg-mult-label">GHG<br>multiplier</div>
+      </div>
+      <div class="ghg-side alberta">
+        <div class="ghg-prov-label">Alberta</div>
+        <div class="ghg-intensity">490</div>
+        <div class="ghg-unit">kg CO₂ per MWh — grid average</div>
+        <div class="ghg-source">Coal and natural gas dominate. Every peak hour avoided means less combustion — the climate case for smart charging is strongest exactly where grid investment is most needed.</div>
+        <div class="ghg-avoided">
+          Smart charging avoids <strong>339,736 t CO₂/year</strong> by 2030
+        </div>
+      </div>
+    </div>
+
+    <div class="insight-box fade-in" style="margin-top: 24px; border-color: rgba(245,158,11,0.3); background: linear-gradient(135deg, rgba(245,158,11,0.06) 0%, rgba(245,158,11,0.02) 100%);">
+      <div class="insight-label" style="color: var(--amber);">The policy implication</div>
+      <p class="insight-text">
+        Smart charging mandates are often framed as a grid reliability tool. This model shows
+        they're equally a climate tool — and a much more powerful one in provinces with
+        fossil-heavy generation. Alberta has every incentive to prioritize smart charging
+        infrastructure over Ontario, even though Ontario's grid stress score from Chapter 2
+        is higher in absolute terms. <em style="color:var(--amber)">Where the grid is dirtiest,
+        the scheduling dividend is largest.</em>
+      </p>
+    </div>
+
+    <!-- GHG by year table -->
+    <div class="fade-in" style="margin-top: 40px;">
+      <div class="section-eyebrow" style="margin-bottom: 16px;">GHG avoided by smart charging — tonnes CO₂/year</div>
+      <table class="results-table">
+        <thead>
+          <tr>
+            <th>Province</th>
+            <th>2025</th>
+            <th>2028</th>
+            <th>2030</th>
+            <th>2035</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="prov-tag on"><span class="dot"></span>Ontario</span></td>
+            <td>21,994 t</td>
+            <td>29,551 t</td>
+            <td class="mw-save">36,013 t</td>
+            <td>59,761 t</td>
+          </tr>
+          <tr>
+            <td><span class="prov-tag ab"><span class="dot"></span>Alberta</span></td>
+            <td>113,741 t</td>
+            <td>225,960 t</td>
+            <td class="mw-save" style="color: var(--amber);">339,736 t</td>
+            <td style="color: var(--amber); font-weight:700;">514,972 t</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ── Data sources + tools ───────────────────────────────────────────── -->
+<section id="sources">
+  <div class="container">
+    <div class="section-header fade-in">
+      <div class="section-eyebrow">Data + methodology</div>
+      <h2>Open grid data. Transparent model.</h2>
+      <p>
+        All grid demand data is publicly available from Canadian grid operators.
+        No API keys, no paywalls. The full pipeline runs in three scripts:
+        download + inspect → clean → model.
+      </p>
+    </div>
+
+    <div class="sources-row fade-in">
+      <div class="source-card">
+        <div class="source-label">Grid · Ontario</div>
+        <div class="source-name">IESO Public Reports</div>
+        <div class="source-meta">PUB_Demand_YYYY.csv · 2019–2025<br>61,368 hourly records</div>
+      </div>
+      <div class="source-card">
+        <div class="source-label">Grid · Alberta</div>
+        <div class="source-name">AESO Hourly AIL</div>
+        <div class="source-meta">Bulk CSV 2020–2025<br>48,935 hourly records · 236 cols → 2 used</div>
+      </div>
+      <div class="source-card">
+        <div class="source-label">EV demand</div>
+        <div class="source-name">Ch.2 projections</div>
+        <div class="source-meta">ev_demand_projections.csv<br>Province × segment × scenario, 2024–2035</div>
+      </div>
+    </div>
+
+    <div class="tools-row fade-in">
+      <span class="tool-tag">Python</span>
+      <span class="tool-tag">pandas</span>
+      <span class="tool-tag">numpy</span>
+      <span class="tool-tag">08_download_inspect_grid.py</span>
+      <span class="tool-tag">09_clean_grid.py</span>
+      <span class="tool-tag">10_peak_model.py</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── Chapter bridge ─────────────────────────────────────────────────── -->
+<div class="bridge-section" id="chapter4">
+  <div class="container">
+    <div class="bridge-eyebrow">What's next</div>
+    <h2 class="bridge-heading">The grid is optimized.<br><em>Now zoom into the city.</em></h2>
+    <p class="bridge-sub">
+      Chapter 3 answered how smart charging can absorb the EV demand shock at the
+      provincial grid level. Chapter 4 zooms in: how does local commercial zoning,
+      urban density, and building stock interact with these macro energy trends
+      at the neighbourhood scale?
+    </p>
+
+    <ul class="bridge-list">
+      <li>Local energy infrastructure and commercial zoning patterns</li>
+      <li>How urban density shapes EV charging demand concentration</li>
+      <li>Building stock electrification and neighbourhood-level load curves</li>
+      <li>Where the grid stress points from Ch.2 land on actual city maps</li>
+    </ul>
+
+    <div class="chapter-map">
+      <div class="ch-row done">
+        <span class="ch-num">Ch.1</span>
+        <span>Energy baseline — Canada's transportation energy landscape, 2000–2023</span>
+        <span class="ch-badge badge-done">✓ Complete</span>
+      </div>
+      <div class="ch-row done">
+        <span class="ch-num">Ch.2</span>
+        <span>EV explosion — adoption modeling, demand projection, grid stress scoring</span>
+        <span class="ch-badge badge-done">✓ Complete</span>
+      </div>
+      <div class="ch-row current">
+        <span class="ch-num">Ch.3</span>
+        <span>AI grid optimization — peak demand model + smart charging simulation</span>
+        <span class="ch-badge badge-current">You are here</span>
+      </div>
+      <div class="ch-row">
+        <span class="ch-num">Ch.4</span>
+        <span>Smart urbanism — city growth, zoning, and local energy infrastructure</span>
+        <span class="ch-badge badge-planned">Planned</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Footer ─────────────────────────────────────────────────────────── -->
+<footer class="footer">
+  <div class="footer-inner">
+    <span>Built by <strong>Saeid Tayeban</strong> · York University · Toronto, ON</span>
+    <div class="footer-links">
+      <a href="https://reports-public.ieso.ca/public/Demand/">IESO Data</a>
+      <a href="https://www.aeso.ca/market/market-and-system-reporting/data-requests/">AESO Data</a>
+      <a href="canada_energy_chapter2.html">← Ch.2</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ── Counter animation ──────────────────────────────────────────────────
+function animateCounter(el) {
+  const target   = parseInt(el.dataset.target);
+  const suffix   = el.dataset.suffix || '';
+  const format   = el.dataset.format || '';
+  const duration = 1800;
+  const start    = performance.now();
+
+  function tick(now) {
+    const elapsed = now - start;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const value = Math.round(eased * target);
+    el.textContent = (format === 'comma'
+      ? value.toLocaleString('en-CA')
+      : value) + suffix;
+    if (progress < 1) requestAnimationFrame(tick);
+    else el.closest('.counter').classList.add('active');
+  }
+  requestAnimationFrame(tick);
+}
+
+// ── Intersection observer ──────────────────────────────────────────────
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    const el = entry.target;
+    if (el.classList.contains('counter-value') && el.textContent === '0') {
+      setTimeout(() => animateCounter(el), 200);
+    }
+    if (el.classList.contains('fade-in')) {
+      el.classList.add('visible');
+    }
+    io.unobserve(el);
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.counter-value, .fade-in').forEach(el => io.observe(el));
+
+// ── Charging hour bar charts ───────────────────────────────────────────
+// Dumb: 0% daytime, 70% evening (17-21), 30% overnight (22-06)
+const dumbProfile = Array(24).fill(0).map((_, h) => {
+  if (h >= 17 && h < 22) return 0.70 / 5;
+  if (h >= 22 || h < 6)  return 0.30 / 8;
+  return 0;
+});
+
+// Smart: 100% overnight (22-06), nothing in evening
+const smartProfile = Array(24).fill(0).map((_, h) => {
+  if (h >= 22 || h < 6) return 1.0 / 8;
+  return 0;
+});
+
+function renderChart(containerId, profile, color) {
+  const el  = document.getElementById(containerId);
+  if (!el) return;
+  const max = Math.max(...profile);
+  profile.forEach((val, h) => {
+    const bar = document.createElement('div');
+    bar.className = 'hour-bar';
+    bar.style.height = max > 0 ? `${(val / max) * 100}%` : '0%';
+    bar.title = `Hour ${h}: ${(val * 100).toFixed(1)}% of daily load`;
+    el.appendChild(bar);
+  });
+}
+
+renderChart('dumb-chart',  dumbProfile,  '#ef4444');
+renderChart('smart-chart', smartProfile, '#00d4aa');
+</script>
+
+</body>
+</html>
