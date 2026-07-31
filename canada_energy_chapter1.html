@@ -47,10 +47,16 @@
     border-bottom: 1px solid var(--border);
     padding: 14px 0;
   }
-  nav .inner {
+  nav .nav-inner {
     max-width: 1080px; margin: 0 auto; padding: 0 24px;
     display: flex; align-items: center; justify-content: space-between;
   }
+  .nav-back {
+    font-size: 13px; color: var(--muted);
+    padding: 4px 10px; border: 1px solid var(--border);
+    border-radius: 4px; transition: all 0.2s;
+  }
+  .nav-back:hover { color: var(--text); border-color: var(--accent); text-decoration: none; }
   .nav-brand {
     font-family: 'Space Grotesk', sans-serif;
     font-size: 13px; font-weight: 600; letter-spacing: 0.08em;
@@ -62,6 +68,20 @@
     transition: color 0.2s;
   }
   .nav-links a:hover { color: var(--text); }
+
+  /* ── Footer ── */
+  .footer {
+    border-top: 1px solid var(--border); padding: 32px 0;
+    font-size: 13px; color: var(--muted);
+  }
+  .footer-inner {
+    max-width: 1080px; margin: 0 auto; padding: 0 24px;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 12px;
+  }
+  .footer-links { display: flex; gap: 16px; }
+  .footer-links a { color: var(--muted); font-size: 13px; text-decoration: none; }
+  .footer-links a:hover { color: var(--accent); }
 
   /* ── Hero ── */
   .hero {
@@ -332,14 +352,14 @@
 
 <!-- Nav -->
 <nav>
-  <div class="inner">
-    <a class="nav-brand" href="#">Canada Energy / Ch.1</a>
+  <div class="nav-inner">
+    <span class="nav-brand">Canada Energy / Ch.1</span>
     <ul class="nav-links">
       <li><a href="#overview">Overview</a></li>
       <li><a href="#sectors">Sectors</a></li>
       <li><a href="#trends">Trends</a></li>
       <li><a href="#intensity">GHG Intensity</a></li>
-      <li><a href="#chapter2">Chapter 2</a></li>
+      <li><a href="canada_energy_chapter2.html">Chapter 2</a></li>
     </ul>
   </div>
 </nav>
@@ -642,9 +662,15 @@
 
 <!-- Footer -->
 <div class="container">
-  <footer>
-    <p>Built by <strong>Saeid Tayeban</strong> · York University · Toronto, ON</p>
-    <p>Data: <a href="https://oee.nrcan.gc.ca/corporate/statistics/neud/dpa/menus/trends/comprehensive_tables/list.cfm" target="_blank">NRCan Office of Energy Efficiency</a> · <a href="https://www150.statcan.gc.ca/t1/tbl1/en/dtbl!25-10-0015-01" target="_blank">Statistics Canada 25-10-0015-01</a></p>
+  <footer class="footer">
+    <div class="footer-inner">
+      <span>Built by <strong>Saeid Tayeban</strong> · York University · Toronto, ON</span>
+      <div class="footer-links">
+        <a href="https://oee.nrcan.gc.ca/corporate/statistics/neud/dpa/menus/trends/comprehensive_tables/list.cfm" target="_blank">NRCan Data</a>
+        <a href="https://www150.statcan.gc.ca/t1/tbl1/en/dtbl!25-10-0015-01" target="_blank">StatCan 25-10-0015-01</a>
+        <a href="canada_energy_chapter2.html">Ch.2 →</a>
+      </div>
+    </div>
   </footer>
 </div>
 

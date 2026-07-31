@@ -47,7 +47,7 @@
     border-bottom: 1px solid var(--border);
     padding: 14px 0;
   }
-  nav .inner {
+  nav .nav-inner {
     max-width: 1080px; margin: 0 auto; padding: 0 24px;
     display: flex; align-items: center; justify-content: space-between;
   }
@@ -63,9 +63,25 @@
   }
   .nav-links a:hover { color: var(--text); }
   .nav-back {
-    font-size: 13px; color: var(--muted); text-decoration: none;
+    font-size: 13px; color: var(--muted);
+    padding: 4px 10px; border: 1px solid var(--border);
+    border-radius: 4px; transition: all 0.2s;
   }
-  .nav-back:hover { color: var(--accent); }
+  .nav-back:hover { color: var(--text); border-color: var(--accent3); text-decoration: none; }
+
+  /* ── Footer ── */
+  .footer {
+    border-top: 1px solid var(--border); padding: 32px 0;
+    font-size: 13px; color: var(--muted);
+  }
+  .footer-inner {
+    max-width: 1080px; margin: 0 auto; padding: 0 24px;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 12px;
+  }
+  .footer-links { display: flex; gap: 16px; }
+  .footer-links a { color: var(--muted); font-size: 13px; text-decoration: none; }
+  .footer-links a:hover { color: var(--accent3); }
 
   /* ── Hero ── */
   .hero {
@@ -402,16 +418,16 @@
 
 <!-- Nav -->
 <nav>
-  <div class="inner">
-    <a class="nav-brand" href="#">Canada Energy / Ch.2</a>
+  <div class="nav-inner">
+    <span class="nav-brand">Canada Energy / Ch.2</span>
     <ul class="nav-links">
       <li><a href="#overview">Overview</a></li>
       <li><a href="#segments">Segments</a></li>
       <li><a href="#projection">Projection</a></li>
       <li><a href="#stress">Grid Stress</a></li>
-      <li><a href="#chapter3">Chapter 3</a></li>
+      <li><a href="canada_energy_chapter3.html">Chapter 3</a></li>
     </ul>
-    <a class="nav-back" href="index.html">← Ch.1</a>
+    <a class="nav-back" href="canada_energy_chapter1.html">← Ch.1</a>
   </div>
 </nav>
 
@@ -809,9 +825,16 @@
 
 <!-- Footer -->
 <div class="container">
-  <footer>
-    <p>Built by <strong>Saeid Tayeban</strong> · York University · Toronto, ON</p>
-    <p>Data: <a href="https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=2310030801" target="_blank">StatCan 23-10-0308-01</a> · <a href="https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=2010002501" target="_blank">StatCan 20-10-0025-01</a> · Federal & provincial ZEV mandate announcements</p>
+  <footer class="footer">
+    <div class="footer-inner">
+      <span>Built by <strong>Saeid Tayeban</strong> · York University · Toronto, ON</span>
+      <div class="footer-links">
+        <a href="https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=2310030801" target="_blank">StatCan 23-10-0308-01</a>
+        <a href="https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=2010002501" target="_blank">StatCan 20-10-0025-01</a>
+        <a href="canada_energy_chapter1.html">← Ch.1</a>
+        <a href="canada_energy_chapter3.html">Ch.3 →</a>
+      </div>
+    </div>
   </footer>
 </div>
 
