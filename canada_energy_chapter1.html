@@ -469,7 +469,7 @@
       <div class="finding-label">Watch this</div>
       <p>
         Total Transportation's GHG figure includes all sub-sectors, making it the
-        single largest emissions source in the dataset at <strong>2,010,626 units</strong>.
+        single largest emissions source in the dataset at <strong>2,010,626 kt CO₂e</strong>.
         Passenger vehicles and freight trucks together explain why transportation
         is Canada's largest source of greenhouse gas emissions nationally.
       </p>
@@ -632,7 +632,7 @@
             <div style="font-size:14px;"><span style="color:var(--accent);">Ch.1</span> <span style="color:var(--muted);">→</span> Energy baseline <span style="color:var(--accent);font-size:11px;">YOU ARE HERE</span></div>
             <div style="font-size:14px;color:var(--muted);">Ch.2 → EV demand shock modeling</div>
             <div style="font-size:14px;color:var(--muted);">Ch.3 → Applied AI · grid optimization</div>
-            <div style="font-size:14px;color:var(--muted);">Ch.4 → Smart urbanism capstone</div>
+            <div style="font-size:14px;"><a href="canada_energy_chapter4.html" style="color:var(--muted);text-decoration:none;">Ch.4 → EV charging infrastructure equity</a></div>
           </div>
         </div>
       </div>
@@ -842,14 +842,28 @@ const observer = new IntersectionObserver((entries) => {
       bar.style.width = bar.dataset.width + "%";
     });
 
-    // Animate counters
-    el.querySelectorAll("[data-target]").forEach(animateCounter);
+    // Animate counters. A short settle delay avoids a race with the
+    // reveal transition — without it, counters in the hero (already in
+    // the viewport on load) can fire before the layout has settled and
+    // never advance past 0.
+    el.querySelectorAll("[data-target]").forEach(counterEl => {
+      setTimeout(() => animateCounter(counterEl), 150);
+    });
 
     observer.unobserve(el);
   });
 }, { threshold: 0.15 });
 
 document.querySelectorAll(".animate").forEach(el => observer.observe(el));
+
+// Fallback: hero stats are visible immediately on most viewports. If the
+// browser never reports them as newly-intersecting (e.g. already fully
+// in view before the observer attaches), animate them directly.
+window.addEventListener("load", () => {
+  document.querySelectorAll(".stats-row [data-target]").forEach(el => {
+    if (el.textContent.replace(/[^0-9.]/g, "") === "0") animateCounter(el);
+  });
+});
 </script>
 </body>
 </html>

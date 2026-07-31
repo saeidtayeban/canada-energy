@@ -6,6 +6,7 @@
 **[→ Chapter 1: Energy Baseline](canada_energy_chapter1.html)**
 **[→ Chapter 2: EV Explosion](canada_energy_chapter2.html)**
 **[→ Chapter 3: AI Grid Optimization](canada_energy_chapter3.html)**
+**[→ Chapter 4: EV Charging Equity](canada_energy_chapter4.html)**
 
 ---
 
@@ -36,6 +37,11 @@ canada-energy/
 │   │       ├── ieso/                   # PUB_Demand_YYYY.csv (2019–2025, from IESO)
 │   │       └── aeso/                   # aeso_hourly_ail_2020_2025.csv (from AESO)
 │   │
+│   ├── ch4/                            # Ch.4 raw + intermediate files (not committed)
+│   │   ├── evse_canada.csv             # NRCan/AFDC EVSE stations, raw pull
+│   │   ├── 98-401-X2021012_eng_CSV.zip # StatCan Census Profile 2021, ADAs (2.4GB uncompressed)
+│   │   └── boundary/lada000b21a_e.shp  # StatCan ADA cartographic boundary file (+ .dbf/.shx/.prj)
+│   │
 │   └── cleaned/                        # Processed, analysis-ready data — committed
 │       ├── README.md                   # Full schema documentation
 │       ├── energy_clean.csv            # 6,048 rows × 7 cols — Ch.1 long-format unified table
@@ -44,7 +50,12 @@ canada-energy/
 │       ├── ev_zev_mandates.csv         # 24 rows × 4 cols — dual-scenario mandate reference
 │       ├── ev_demand_projections.csv   # EV fleet + kWh demand, 2024–2035, both scenarios
 │       ├── grid_stress_scores.csv      # Province × year stress scores, both scenarios
-│       └── grid_hourly_clean.csv       # 110,303 rows × 3 cols — hourly demand, ON + AB, 2019–2025
+│       ├── grid_hourly_clean.csv       # 110,303 rows × 3 cols — hourly demand, ON + AB, 2019–2025
+│       ├── evse_summary.csv            # 16,283 rows — slimmed EVSE station data
+│       ├── ada_dwelling_income.csv     # 5,433 rows — dwelling type + income per ADA
+│       ├── evse_with_ada.csv           # 16,283 rows — stations geo-joined to their ADA
+│       ├── ada_classified.csv          # 5,433 rows — ADAs classified + modeled EV counts
+│       └── ch4_master.csv              # 5,433 rows — full Ch.4 join: ADA × infra × demand
 │
 ├── scripts/
 │   ├── 01_inspect.py                   # Ch.1 — structural audit of raw source files
@@ -56,27 +67,36 @@ canada-energy/
 │   ├── 07_ev_demand_model.py           # Ch.2 — kWh demand projection + grid stress scoring
 │   ├── 08_download_inspect_grid.py     # Ch.3 — download IESO/AESO hourly CSVs + inspect
 │   ├── 09_clean_grid.py                # Ch.3 — clean both sources → unified grid_hourly_clean.csv
-│   └── 10_peak_model.py                # Ch.3 — EV load overlay + smart charging simulation
+│   ├── 10_peak_model.py                # Ch.3 — EV load overlay + smart charging simulation
+│   ├── 11_download_inspect.py          # Ch.4 — RAM-safe extraction: EVSE + census profile
+│   ├── 12_clean.py                     # Ch.4 — classify ADAs, scale EV counts to neighbourhood
+│   ├── 12b_geojoin.py                  # Ch.4 — spatial join: stations → ADA (point-in-polygon)
+│   └── 13_eda_gap_model.py             # Ch.4 — gap analysis, equity scoring, charts
 │
 ├── data/outputs/                       # Ch.3 model outputs
 │   ├── peak_summary.csv                # Headline results: province × year, MW saved, GHG avoided
 │   ├── hourly_profiles.csv             # Full hourly demand traces, all province-years
-│   └── charging_shift_detail.csv       # Hour-by-hour load shift, dumb vs smart charging
+│   ├── charging_shift_detail.csv       # Hour-by-hour load shift, dumb vs smart charging
+│   ├── ch4_summary_stats.csv           # Ch.4 — national gap summary (1 row)
+│   ├── ch4_gap_by_income_density.csv   # Ch.4 — income quintile × density group cross-tab
+│   └── ch4_equity_scored.csv           # Ch.4 — every ADA ranked by equity gap score
 │
 ├── outputs/
 │   ├── plots/
 │   │   ├── ch1/                        # 7 PNG charts from 03_eda.py
-│   │   └── ch2/                        # 8 PNG charts from 06_ev_eda.py + 07_ev_demand_model.py
+│   │   ├── ch2/                        # 8 PNG charts from 06_ev_eda.py + 07_ev_demand_model.py
+│   │   └── ch4/                        # 3 PNG charts from 13_eda_gap_model.py
 │   └── reports/
 │       └── eda_report.txt              # Full console output from EDA runs
 │
 ├── docs/
 │   ├── data-sources.md                 # Source citations, URLs, format quirks
-│   └── findings.md                     # Key findings, Ch.1 through Ch.3
+│   └── findings.md                     # Key findings, Ch.1 through Ch.4
 │
 ├── canada_energy_chapter1.html         # Interactive portfolio report — Ch.1
 ├── canada_energy_chapter2.html         # Interactive portfolio report — Ch.2
 ├── canada_energy_chapter3.html         # Interactive portfolio report — Ch.3
+├── canada_energy_chapter4.html         # Interactive portfolio report — Ch.4
 ├── requirements.txt                    # Python dependencies
 └── README.md                           # This file
 ```
@@ -265,6 +285,66 @@ python scripts/10_peak_model.py
 
 ---
 
+### Chapter 4 — EV Charging Infrastructure Equity
+
+No single StatCan table has EV counts, income, and dwelling type at the
+neighbourhood level, so this chapter builds that view by joining three
+separate public sources on geography.
+
+#### `11_download_inspect.py` — RAM-Safe Extraction
+
+Streams the 2.4GB StatCan Census Profile (Aggregate Dissemination Areas)
+row-by-row — never loaded fully into memory — filtering to just the
+dwelling-type and income characteristics needed, plus a full inspection
+of the raw EVSE station file.
+
+```bash
+python scripts/11_download_inspect.py
+```
+
+**Input:** `data/ch4/evse_canada.csv`, `data/ch4/98-401-X2021012_eng_CSV.zip`
+**Output:** `data/cleaned/evse_summary.csv`, `data/cleaned/ada_dwelling_income.csv`
+
+---
+
+#### `12_clean.py` + `12b_geojoin.py` — Classify + Geo-Join
+
+Classifies every ADA by dominant structural dwelling type (house vs.
+apartment — a proxy for home-charging access) and income quintile, then
+models each ADA's EV count as its share of provincial population × the
+province's total registered EVs (StatCan doesn't publish registrations
+below the province level). Separately, spatial-joins every EVSE station's
+lat/long to its containing ADA via point-in-polygon against the StatCan
+ADA cartographic boundary shapefile.
+
+```bash
+python scripts/12_clean.py
+python scripts/12b_geojoin.py
+```
+
+**Input:** `data/cleaned/ada_dwelling_income.csv`, `data/cleaned/ev_annual_clean.csv`,
+`data/cleaned/evse_summary.csv`, `data/ch4/boundary/lada000b21a_e.shp`
+**Output:** `data/cleaned/ada_classified.csv`, `data/cleaned/evse_with_ada.csv`
+
+---
+
+#### `13_eda_gap_model.py` — Gap Analysis + Equity Scoring
+
+Merges the classified ADAs with their matched station/port counts,
+computes charging ports per 1,000 modeled EVs, cross-tabs the
+zero-infrastructure rate by income quintile × dwelling density, and scores
+every ADA by an income-weighted equity gap.
+
+```bash
+python scripts/13_eda_gap_model.py
+```
+
+**Input:** `data/cleaned/ada_classified.csv`, `data/cleaned/evse_with_ada.csv`
+**Output:** `data/outputs/ch4_summary_stats.csv`, `data/outputs/ch4_gap_by_income_density.csv`,
+`data/outputs/ch4_equity_scored.csv`, `outputs/plots/ch4/*.png`
+
+---
+
 ## Key Findings
 
 ### Chapter 1 — Energy Baseline
@@ -309,6 +389,21 @@ python scripts/10_peak_model.py
 
 **Core thesis:** Smart charging is a climate tool as much as a grid reliability tool — and it's 16× more powerful in provinces where the grid is dirtiest. Alberta has every incentive to prioritize smart charging infrastructure, even though Ontario faces higher absolute grid stress from Chapter 2. At scale (Alberta 2035), smart charging alone is insufficient — overnight windows crowd at high EV penetration, and grid investment becomes unavoidable.
 
+### Chapter 4 — EV Charging Infrastructure Equity
+
+| Finding | Number |
+|---------|--------|
+| Neighbourhoods (ADAs) with zero public charging | **2,297 of 5,329** (43%) |
+| ...of which already have real modeled EV demand | **1,503** |
+| Charging-desert gap, poorest vs. richest quintile — apartment-dominant ADAs | **27.9% → 7.1%** (4×) |
+| Charging-desert rate, house-dominant ADAs (flat across income) | **~30–65%**, not income-driven |
+| Median charging ports per 1,000 modeled EVs (national) | **10.85** |
+| Median ports/1,000 EVs, apartment-dominant Q1 vs. Q5 | **17.7 → 41.5** |
+| Stations geo-joined to a neighbourhood | **16,264 of 16,283** (99.9%) |
+| Worst individual equity gaps concentrated in | **Ontario, BC, Newfoundland & Labrador** |
+
+**Core thesis:** Income only predicts charging access where home charging isn't an option. In low-density neighbourhoods, charging-desert rates barely track income. In apartment-dominant neighbourhoods — where public charging is often the only option — the poorest quintile is 4× more likely to have zero stations than the richest. **Caveat:** EV counts are modeled from province-level registrations scaled by population share, not measured at the neighbourhood level.
+
 ---
 
 ## Setup
@@ -336,9 +431,18 @@ python scripts/07_ev_demand_model.py
 python scripts/08_download_inspect_grid.py
 python scripts/09_clean_grid.py
 python scripts/10_peak_model.py
+
+# 6. Run Chapter 4
+# Note: raw EVSE/census/boundary files must be downloaded manually first
+# (StatCan census profile + ADA boundary files aren't served via a stable
+# API — see docs/data-sources.md for exact download pages)
+python scripts/11_download_inspect.py
+python scripts/12_clean.py
+python scripts/12b_geojoin.py
+python scripts/13_eda_gap_model.py
 ```
 
-`energy_clean.csv`, the `ev_*_clean.csv` files, and `grid_hourly_clean.csv` are committed — you can skip the download and cleaning scripts and run the EDA/model scripts directly to reproduce the analysis.
+`energy_clean.csv`, the `ev_*_clean.csv` files, `grid_hourly_clean.csv`, and all Ch.4 `ada_*`/`evse_*`/`ch4_*` files are committed — you can skip the download and cleaning scripts and run the EDA/model scripts directly to reproduce the analysis.
 
 ---
 
@@ -349,7 +453,7 @@ python scripts/10_peak_model.py
 | **Ch.1 — Energy Baseline** | ✅ Complete | National transportation energy landscape, 2000–2023 |
 | **Ch.2 — EV Explosion** | ✅ Complete | EV adoption modeling, dual-scenario demand projection, grid stress scoring |
 | **Ch.3 — AI Grid Optimization** | ✅ Complete | Hourly peak demand model, EV load overlay, smart charging simulation (ON + AB) |
-| **Ch.4 — Smart Urbanism** | 📋 Planned | City growth, commercial zoning, and local energy infrastructure |
+| **Ch.4 — EV Charging Equity** | ✅ Complete | Neighbourhood-level charging access gaps by income and dwelling type |
 
 ---
 
@@ -364,6 +468,9 @@ python scripts/10_peak_model.py
 | [IESO Public Reports](https://reports-public.ieso.ca/public/Demand/) | `PUB_Demand_YYYY.csv` | Ontario hourly electricity demand, MW, 2019–2025 |
 | [AESO Data Requests](https://www.aeso.ca/market/market-and-system-reporting/data-requests/) | `aeso_hourly_ail_2020_2025.csv` | Alberta Internal Load (AIL), MW hourly, 2020–2025 |
 | Federal & provincial ZEV mandate announcements | `ev_zev_mandates.csv` (hand-compiled) | Original and revised ZEV targets, 2026/2030/2035, post-Sept 2025 rollback |
+| [NRCan / AFDC Alternative Fuel Stations](https://afdc.energy.gov/stations) | `evse_canada.csv` | Canadian EV charging station locations, ports, networks |
+| [StatCan Census Profile 2021 — 98-401-X2021012](https://www12.statcan.gc.ca/census-recensement/2021/dp-pd/prof/index.cfm) | `98-401-X2021012_eng_CSV.zip` | Income, dwelling type, population — Aggregate Dissemination Area level |
+| [StatCan 2021 Census Boundary Files](https://www12.statcan.gc.ca/census-recensement/2021/geo/sip-pis/boundary-limites/index2021-eng.cfm?year=21) | `lada000b21a_e.shp` | ADA cartographic boundary polygons (Shapefile), for the EVSE geo-join |
 
 Full source notes and format quirks: [`docs/data-sources.md`](docs/data-sources.md)
 

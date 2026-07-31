@@ -799,7 +799,7 @@
             <div style="font-size:14px;"><span style="color:var(--accent);">Ch.1</span> <span style="color:var(--muted);">→</span> Energy baseline</div>
             <div style="font-size:14px;"><span style="color:var(--accent3);">Ch.2</span> <span style="color:var(--muted);">→</span> EV demand shock modeling <span style="color:var(--accent3);font-size:11px;">YOU ARE HERE</span></div>
             <div style="font-size:14px;color:var(--muted);">Ch.3 → Applied AI · grid optimization</div>
-            <div style="font-size:14px;color:var(--muted);">Ch.4 → Smart urbanism capstone</div>
+            <div style="font-size:14px;"><a href="canada_energy_chapter4.html" style="color:var(--muted);text-decoration:none;">Ch.4 → EV charging infrastructure equity</a></div>
           </div>
         </div>
       </div>
@@ -1010,13 +1010,21 @@ const observer = new IntersectionObserver((entries) => {
       bar.style.width = bar.dataset.width + "%";
     });
 
-    el.querySelectorAll("[data-target]").forEach(animateCounter);
+    el.querySelectorAll("[data-target]").forEach(counterEl => {
+      setTimeout(() => animateCounter(counterEl), 150);
+    });
 
     observer.unobserve(el);
   });
 }, { threshold: 0.15 });
 
 document.querySelectorAll(".animate").forEach(el => observer.observe(el));
+
+window.addEventListener("load", () => {
+  document.querySelectorAll(".stats-row [data-target]").forEach(el => {
+    if (el.textContent.replace(/[^0-9.]/g, "") === "0") animateCounter(el);
+  });
+});
 </script>
 </body>
 </html>
