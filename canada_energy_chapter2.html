@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Canada Energy — Chapter 2: The EV Explosion | Saeid Tayeban</title>
+<style>
+  /* ── Reset & base ─────────────────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg-0:     #07090f;
+    --bg-1:     #0d1221;
+    --bg-2:     #121929;
+    --bg-3:     #1a2235;
+    --bg-card:  #151e30;
+    --teal:     #00d4aa;
+    --teal-dim: #00a882;
+    --teal-glow:#00d4aa22;
+    --amber:    #f59e0b;
+    --amber-dim:#d97706;
+    --red:      #ef4444;
+    --blue:     #3b82f6;
+    --text-0:   #f0f4ff;
+    --text-1:   #a8b4cc;
+    --text-2:   #6b7a96;
+    --border:   #1e2d45;
+    --border-2: #2a3d5a;
+    --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg-0);
+    color: var(--text-0);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Typography ───────────────────────────────────────────────────── */
+  h1 { font-size: clamp(2.2rem, 5vw, 3.6rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; }
+  h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); font-weight: 700; letter-spacing: -0.02em; line-height: 1.2; }
+  h3 { font-size: 1.15rem; font-weight: 600; letter-spacing: -0.01em; }
+  p  { color: var(--text-1); max-width: 68ch; }
+  a  { color: var(--teal); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  em { color: var(--teal); font-style: normal; font-weight: 600; }
+
+  /* ── Layout ───────────────────────────────────────────────────────── */
+  .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+  section { padding: 96px 0; border-top: 1px solid var(--border); }
+  section:first-of-type { border-top: none; }
+
+  /* ── Nav ──────────────────────────────────────────────────────────── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(7,9,15,0.88); backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-inner {
+    display: flex; align-items: center; justify-content: space-between;
+    max-width: 900px; margin: 0 auto; padding: 0 24px; height: 52px;
+  }
+  .nav-brand {
+    font-size: 0.8rem; font-weight: 700; letter-spacing: 0.02em; color: var(--text-0);
+  }
+  .nav-links { display: flex; gap: 22px; list-style: none; }
+  .nav-links a { font-size: 0.8rem; color: var(--text-2); }
+  .nav-links a:hover { color: var(--text-0); text-decoration: none; }
+  .nav-back {
+    font-size: 0.78rem; color: var(--text-2);
+    padding: 4px 10px; border: 1px solid var(--border-2);
+    border-radius: 4px; transition: all 0.2s;
+  }
+  .nav-back:hover { color: var(--text-0); border-color: var(--teal); text-decoration: none; }
+
+  /* ── Hero ─────────────────────────────────────────────────────────── */
+  .hero { padding: 88px 0 72px; }
+  .hero-eyebrow {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--teal); margin-bottom: 24px;
+  }
+  .hero-eyebrow::before {
+    content: ''; display: block; width: 24px; height: 1px; background: var(--teal);
+  }
+
+  .hero h1 { margin-bottom: 28px; }
+  .hero h1 span { color: var(--teal); display: block; }
+
+  .hero-sub {
+    font-size: 1.05rem; color: var(--text-1); max-width: 62ch;
+    margin-bottom: 56px; line-height: 1.75;
+  }
+
+  /* ── Hero counters ────────────────────────────────────────────────── */
+  .counters {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 2px; border: 1px solid var(--border); border-radius: 10px;
+    overflow: hidden;
+  }
+  .counter {
+    background: var(--bg-card); padding: 28px 24px;
+    position: relative; overflow: hidden;
+  }
+  .counter::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0;
+    height: 2px; background: var(--teal); opacity: 0;
+    transition: opacity 0.4s;
+  }
+  .counter.active::before { opacity: 1; }
+  .counter-value {
+    font-size: 2.2rem; font-weight: 800; letter-spacing: -0.04em;
+    color: var(--teal); line-height: 1; margin-bottom: 8px;
+    font-variant-numeric: tabular-nums;
+  }
+  .counter-value.amber { color: var(--amber); }
+  .counter-value.red   { color: var(--red); }
+  .counter-label {
+    font-size: 0.78rem; color: var(--text-2); line-height: 1.5;
+  }
+
+  /* ── Dataset band ─────────────────────────────────────────────────── */
+  .dataset-band {
+    background: var(--bg-2); border: 1px solid var(--border);
+    border-radius: 8px; padding: 20px 24px;
+    display: flex; gap: 32px; flex-wrap: wrap;
+    margin-top: 40px;
+  }
+  .ds-item { display: flex; flex-direction: column; gap: 2px; }
+  .ds-label { font-size: 0.7rem; color: var(--text-2); text-transform: uppercase; letter-spacing: 0.08em; }
+  .ds-value { font-size: 0.9rem; font-weight: 600; color: var(--text-0); }
+
+  /* ── Section headers ──────────────────────────────────────────────── */
+  .section-eyebrow {
+    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--teal);
+    margin-bottom: 12px;
+  }
+  .section-header { margin-bottom: 40px; }
+  .section-header h2 { margin-bottom: 16px; }
+
+  /* ── Generic info card ───────────────────────────────────────────── */
+  .info-card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 28px 32px;
+  }
+  .info-card-title {
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-2); margin-bottom: 24px;
+  }
+  .two-col-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 32px; }
+  .stat-block + .stat-block { margin-top: 20px; }
+  .stat-block-label { font-size: 0.78rem; color: var(--text-2); margin-bottom: 6px; }
+  .stat-block-value { font-size: 1.8rem; font-weight: 800; letter-spacing: -0.03em; }
+  .stat-block-value.lg { font-size: 2.2rem; }
+
+  /* ── Tile grid (segment / intensity style cards) ─────────────────── */
+  .tile-grid { display: grid; gap: 16px; margin-top: 32px; }
+  .tile-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+  .tile-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+  .tile-card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 24px;
+  }
+  .tile-label {
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-2); margin-bottom: 12px;
+  }
+  .tile-value { font-size: 1.7rem; font-weight: 800; letter-spacing: -0.03em; line-height: 1; margin-bottom: 6px; }
+  .tile-value.teal  { color: var(--teal); }
+  .tile-value.amber { color: var(--amber); }
+  .tile-value.red   { color: var(--red); }
+  .tile-value.blue  { color: var(--blue); }
+  .tile-desc { font-size: 0.78rem; color: var(--text-2); line-height: 1.5; }
+
+  /* ── Bar chart ────────────────────────────────────────────────────── */
+  .bar-chart { display: flex; flex-direction: column; gap: 14px; }
+  .bar-row { display: flex; align-items: center; gap: 12px; }
+  .bar-label {
+    font-size: 0.82rem; color: var(--text-0);
+    width: 60px; flex-shrink: 0;
+  }
+  .bar-track { flex: 1; height: 8px; background: var(--border); border-radius: 4px; position: relative; overflow: hidden; }
+  .bar-fill { height: 100%; width: 0; border-radius: 4px; transition: width 1.2s cubic-bezier(0.16,1,0.3,1); }
+  .bar-val { font-size: 0.78rem; color: var(--text-2); width: 60px; text-align: right; flex-shrink: 0; font-variant-numeric: tabular-nums; }
+
+  /* ── Line chart ───────────────────────────────────────────────────── */
+  .line-chart-svg { width: 100%; height: 240px; }
+
+  /* ── Results table ────────────────────────────────────────────────── */
+  .results-table {
+    width: 100%; border-collapse: collapse; margin-top: 32px;
+    font-size: 0.84rem;
+  }
+  .results-table thead tr { border-bottom: 2px solid var(--border-2); }
+  .results-table th {
+    text-align: left; padding: 10px 14px;
+    font-size: 0.68rem; font-weight: 600; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-2);
+  }
+  .results-table th.num { text-align: right; }
+  .results-table td { padding: 11px 14px; border-bottom: 1px solid var(--border); }
+  .results-table td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .results-table tbody tr:hover { background: var(--bg-2); }
+  .results-table tr.sep td { padding: 3px; border-bottom: 1px dashed var(--border); }
+
+  .pill {
+    display: inline-block; font-size: 0.72rem; font-weight: 700;
+    padding: 2px 9px; border-radius: 4px;
+  }
+  .pill.amber { color: var(--amber); background: rgba(245,158,11,0.12); }
+  .pill.teal  { color: var(--teal);  background: rgba(0,212,170,0.12); }
+  .pill.blue  { color: var(--blue);  background: rgba(59,130,246,0.12); }
+
+  /* ── Key insight callout ──────────────────────────────────────────── */
+  .insight-box {
+    background: linear-gradient(135deg, rgba(0,212,170,0.06) 0%, rgba(0,212,170,0.02) 100%);
+    border: 1px solid rgba(0, 212, 170, 0.3);
+    border-radius: 10px; padding: 32px 36px; margin-top: 40px;
+    position: relative; overflow: hidden;
+  }
+  .insight-box::before {
+    content: ''; position: absolute; top: 0; left: 0;
+    width: 3px; height: 100%; background: var(--teal);
+  }
+  .insight-box.warn {
+    background: linear-gradient(135deg, rgba(245,158,11,0.06) 0%, rgba(245,158,11,0.02) 100%);
+    border-color: rgba(245, 158, 11, 0.3);
+  }
+  .insight-box.warn::before { background: var(--amber); }
+  .insight-box.warn .insight-label { color: var(--amber); }
+  .insight-box.alert {
+    background: linear-gradient(135deg, rgba(239,68,68,0.06) 0%, rgba(239,68,68,0.02) 100%);
+    border-color: rgba(239, 68, 68, 0.3);
+  }
+  .insight-box.alert::before { background: var(--red); }
+  .insight-box.alert .insight-label { color: var(--red); }
+  .insight-label {
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--teal); margin-bottom: 12px;
+  }
+  .insight-text { font-size: 1.05rem; color: var(--text-0); line-height: 1.75; max-width: none; }
+
+  /* ── Data sources ─────────────────────────────────────────────────── */
+  .sources-row {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;
+    margin-top: 32px;
+  }
+  .source-card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 8px; padding: 18px 20px;
+  }
+  .source-label {
+    font-size: 0.68rem; color: var(--text-2); text-transform: uppercase;
+    letter-spacing: 0.08em; margin-bottom: 4px;
+  }
+  .source-name { font-size: 0.84rem; font-weight: 600; color: var(--text-0); margin-bottom: 2px; }
+  .source-meta { font-size: 0.76rem; color: var(--text-2); }
+
+  /* ── Tools row ────────────────────────────────────────────────────── */
+  .tools-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+  .tool-tag {
+    font-size: 0.75rem; font-family: var(--font-mono);
+    background: var(--bg-3); border: 1px solid var(--border-2);
+    padding: 4px 10px; border-radius: 4px; color: var(--text-1);
+  }
+
+  /* ── Chapter bridge / closer ──────────────────────────────────────── */
+  .bridge-section {
+    background: var(--bg-1); border-top: 1px solid var(--border);
+    padding: 88px 0;
+  }
+  .bridge-eyebrow {
+    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--text-2); margin-bottom: 8px;
+  }
+  .bridge-heading { font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 800; margin-bottom: 20px; }
+  .bridge-heading em { color: var(--teal); font-style: normal; display: block; }
+  .bridge-sub { font-size: 0.95rem; color: var(--text-1); max-width: 58ch; margin-bottom: 32px; }
+
+  .bridge-list { list-style: none; margin-bottom: 36px; display: flex; flex-direction: column; gap: 10px; }
+  .bridge-list li {
+    display: flex; align-items: baseline; gap: 10px;
+    font-size: 0.84rem; color: var(--text-1);
+  }
+  .bridge-list li::before {
+    content: '→'; color: var(--teal); font-weight: 700; flex-shrink: 0;
+  }
+
+  /* ── Chapter map ──────────────────────────────────────────────────── */
+  .chapter-map {
+    display: flex; flex-direction: column; gap: 8px; margin-top: 40px;
+    padding-top: 32px; border-top: 1px solid var(--border);
+  }
+  .ch-row {
+    display: flex; align-items: center; gap: 14px;
+    padding: 10px 14px; border-radius: 6px;
+    font-size: 0.82rem; color: var(--text-2);
+  }
+  .ch-row.current {
+    background: rgba(0, 212, 170, 0.06);
+    border: 1px solid rgba(0, 212, 170, 0.2);
+    color: var(--text-0);
+  }
+  .ch-row.done { color: var(--text-1); }
+  .ch-num {
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em;
+    width: 28px; flex-shrink: 0; font-family: var(--font-mono);
+  }
+  .ch-row.current .ch-num { color: var(--teal); }
+  .ch-row.done .ch-num    { color: var(--teal-dim); }
+  .ch-badge {
+    margin-left: auto; font-size: 0.68rem; padding: 2px 8px;
+    border-radius: 3px;
+  }
+  .badge-done    { background: rgba(0, 212, 170, 0.12); color: var(--teal); }
+  .badge-current { background: rgba(0, 212, 170, 0.12); color: var(--teal); }
+  .badge-planned { background: rgba(107, 122, 150, 0.12); color: var(--text-2); }
+
+  /* ── Footer ───────────────────────────────────────────────────────── */
+  .footer {
+    border-top: 1px solid var(--border); padding: 32px 0;
+    font-size: 0.78rem; color: var(--text-2);
+  }
+  .footer-inner {
+    max-width: 900px; margin: 0 auto; padding: 0 24px;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 12px;
+  }
+  .footer-links { display: flex; gap: 16px; }
+  .footer-links a { color: var(--text-2); font-size: 0.78rem; }
+  .footer-links a:hover { color: var(--teal); }
+
+  /* ── Responsive ───────────────────────────────────────────────────── */
+  @media (max-width: 680px) {
+    .counters       { grid-template-columns: 1fr; }
+    .two-col-grid   { grid-template-columns: 1fr; }
+    .tile-grid.cols-3, .tile-grid.cols-4 { grid-template-columns: 1fr 1fr; }
+    .sources-row    { grid-template-columns: 1fr; }
+    .nav-links      { display: none; }
+    .results-table  { font-size: 0.74rem; }
+  }
+
+  /* ── Animations ───────────────────────────────────────────────────── */
+  .fade-in { opacity: 0; transform: translateY(18px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fade-in { opacity: 1; transform: none; transition: none; }
+    * { animation: none !important; }
+  }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- ── Nav ──────────────────────────────────────────────────────────── -->
+<nav>
+  <div class="nav-inner">
+    <span class="nav-brand">Canada Energy / Ch.2</span>
+    <ul class="nav-links">
+      <li><a href="#overview">Overview</a></li>
+      <li><a href="#segments">Segments</a></li>
+      <li><a href="#projection">Projection</a></li>
+      <li><a href="#stress">Grid Stress</a></li>
+      <li><a href="canada_energy_chapter3.html">Chapter 3</a></li>
+    </ul>
+    <a href="canada_energy_chapter1.html" class="nav-back">← Ch.1</a>
+  </div>
+</nav>
+
+<!-- ── Hero ─────────────────────────────────────────────────────────── -->
+<section class="hero" id="overview">
+  <div class="container">
+    <div class="hero-eyebrow">Data Analysis Portfolio · Chapter 2 of 4</div>
+    <h1>What happens when<br><em>Canada's roads go electric?</em></h1>
+    <p class="hero-sub">
+      Chapter 1 established the baseline: the grid is decarbonizing, the roads
+      are not. Chapter 2 models the EV adoption shock — province by province,
+      segment by segment — and stress-tests it against real grid capacity.
+    </p>
+
+    <div class="counters">
+      <div class="counter" id="c1">
+        <div class="counter-value amber" data-target="489.7" data-suffix="%" data-format="decimal1">0</div>
+        <div class="counter-label">EV fleet growth<br>2017 → 2024</div>
+      </div>
+      <div class="counter" id="c2">
+        <div class="counter-value" data-target="5.0" data-suffix="%" data-format="decimal1">0</div>
+        <div class="counter-label">National EV share of<br>registered vehicles, 2024</div>
+      </div>
+      <div class="counter" id="c3">
+        <div class="counter-value red" data-target="48.8" data-suffix="%" data-format="decimal1">0</div>
+        <div class="counter-label">Saskatchewan's grid stress<br>score by 2035 — the highest</div>
+      </div>
+    </div>
+
+    <div class="dataset-band fade-in">
+      <div class="ds-item">
+        <span class="ds-label">Annual registrations</span>
+        <span class="ds-value">StatCan 23-10-0308-01 — 960 rows</span>
+      </div>
+      <div class="ds-item">
+        <span class="ds-label">Quarterly new sales</span>
+        <span class="ds-value">StatCan 20-10-0025-01 — 4,144 rows</span>
+      </div>
+      <div class="ds-item">
+        <span class="ds-label">2024 EV fleet</span>
+        <span class="ds-value">1,270,546 vehicles</span>
+      </div>
+      <div class="ds-item">
+        <span class="ds-label">Mandate scenarios</span>
+        <span class="ds-value">Original vs. revised (2025 rollback)</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Section 1: Overview ──────────────────────────────────────────── -->
+<section>
+  <div class="container">
+    <div class="section-header fade-in">
+      <div class="section-eyebrow">Dataset</div>
+      <h2>1.27 million EVs, 10 provinces, 4 fuel transitions tracked.</h2>
+      <p>
+        Built from Statistics Canada's vehicle registration tables — annual
+        registrations by type and fuel (2017–2024) and quarterly new sales by
+        geography (2017–2023) — plus a hand-compiled federal and provincial
+        ZEV mandate reference covering the 2025 policy rollback.
+      </p>
+    </div>
+
+    <div class="two-col-grid fade-in">
+      <div class="info-card">
+        <div class="info-card-title">Source tables</div>
+        <div class="stat-block">
+          <div class="stat-block-label">StatCan 23-10-0308-01</div>
+          <div class="stat-block-value">960 rows</div>
+          <div class="tile-desc" style="margin-top:4px;">Annual registrations · type × fuel · 2017–2024</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-block-label">StatCan 20-10-0025-01</div>
+          <div class="stat-block-value">4,144 rows</div>
+          <div class="tile-desc" style="margin-top:4px;">Quarterly new sales · province-level · 2017–2023</div>
+        </div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">2024 fleet snapshot</div>
+        <div class="stat-block">
+          <div class="stat-block-label">Total registered EVs</div>
+          <div class="stat-block-value lg">1,270,546</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-block-label">Total fleet (10 provinces)</div>
+          <div class="stat-block-value lg">25,620,451</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-block-label">Growth since 2017</div>
+          <div class="stat-block-value" style="color:var(--teal);">+489.7%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Section 2: Provincial EV Share ──────────────────────────────── -->
+<section id="segments">
+  <div class="container">
+    <div class="section-header fade-in">
+      <div class="section-eyebrow">EV Share · 2024</div>
+      <h2>Two provinces are pulling away</h2>
+      <p>
+        British Columbia and Quebec lead the country in EV adoption — both
+        well above 7%. Most of the rest of the country sits clustered
+        between 2–3%, with Saskatchewan trailing at 1.5%.
+      </p>
+    </div>
+
+    <div class="info-card fade-in">
+      <div class="info-card-title">EV share of total registrations by province — 2024</div>
+      <div class="bar-chart" id="province-chart"></div>
+    </div>
+
+    <div class="insight-box fade-in">
+      <div class="insight-label">Key finding</div>
+      <p class="insight-text" style="font-size:0.95rem;">
+        BC (<strong>7.9%</strong>) and Quebec (<strong>7.0%</strong>) are running roughly
+        5x ahead of Saskatchewan (<strong>1.5%</strong>). Both leaders combine strong
+        provincial purchase incentives with hydro-dominant grids — cheap, clean
+        power makes EV ownership economically rational in a way it isn't yet
+        in fossil-heavy provinces.
+      </p>
+    </div>
+
+    <div class="section-header fade-in" style="margin-top:64px;">
+      <div class="section-eyebrow">Vehicle Segments</div>
+      <h2>Trucks and SUVs are already the majority</h2>
+      <p>
+        Of 1.27M registered EVs in 2024, light trucks and SUVs outnumber
+        passenger cars — the segment that consumes 30–40% more energy per
+        charge. Heavy freight and urban transit remain almost entirely
+        unelectrified in the registration data itself.
+      </p>
+    </div>
+
+    <div class="tile-grid cols-4 fade-in">
+      <div class="tile-card">
+        <div class="tile-label">Light Passenger</div>
+        <div class="tile-value teal">481,207</div>
+        <div class="tile-desc">~20 kWh/100km · overnight residential charging, predictable load</div>
+      </div>
+      <div class="tile-card">
+        <div class="tile-label">Light Truck / SUV</div>
+        <div class="tile-value blue">789,339</div>
+        <div class="tile-desc">~28 kWh/100km · Canada's best-selling vehicle class, largest EV segment</div>
+      </div>
+      <div class="tile-card">
+        <div class="tile-label">Heavy Freight</div>
+        <div class="tile-value amber">Near-zero</div>
+        <div class="tile-desc">~170 kWh/100km · modeled via federal MHDV targets, not registration data</div>
+      </div>
+      <div class="tile-card">
+        <div class="tile-label">Urban Transit</div>
+        <div class="tile-value amber">Near-zero</div>
+        <div class="tile-desc">~90 kWh/100km · scheduled depot charging, best-case coordination problem</div>
+      </div>
+    </div>
+
+    <div class="insight-box warn fade-in">
+      <div class="insight-label">Data gap, handled</div>
+      <p class="insight-text" style="font-size:0.95rem;">
+        Heavy freight and transit EV counts are near-zero in StatCan's
+        registration tables — not a data error, but a real reflection of
+        how early these segments are. The demand model substitutes federal
+        Medium- and Heavy-Duty Vehicle ZEV targets (35% of new MHDV sales
+        by 2030) as the input for freight, since registration history alone
+        can't support a projection yet.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ── Section 3: Policy rollback ───────────────────────────────────── -->
+<section id="mandate">
+  <div class="container">
+    <div class="section-header fade-in">
+      <div class="section-eyebrow">Policy · September 2025 – April 2026</div>
+      <h2>The mandate moved while the model was being built</h2>
+      <p>
+        In September 2025 the federal government paused the 2026 ZEV sales
+        mandate and opened a 60-day review. By early 2026, both the federal
+        target and British Columbia's had been revised down from 100% to
+        75% by 2035. Quebec moved earlier, cutting its target to 90%.
+      </p>
+    </div>
+
+    <div class="info-card fade-in">
+      <div class="info-card-title">ZEV sales mandate trajectories — original vs. revised target</div>
+      <svg class="line-chart-svg" id="mandate-svg" viewBox="0 0 900 240"
+           preserveAspectRatio="none"></svg>
+    </div>
+
+    <div class="tile-grid cols-3 fade-in">
+      <div class="tile-card">
+        <div class="tile-label">Federal</div>
+        <div class="tile-value red" style="font-size:1.4rem;">100% → 75%</div>
+        <div class="tile-desc">
+          2026 target paused entirely. 2035 ceiling cut by 25 percentage
+          points following the September 2025 review.
+        </div>
+      </div>
+      <div class="tile-card">
+        <div class="tile-label">British Columbia</div>
+        <div class="tile-value amber" style="font-size:1.4rem;">100% → 75%</div>
+        <div class="tile-desc">
+          Mirrored the federal cut almost exactly. Near-term 2026/27 target
+          of 26% held steady — the rollback is back-loaded to 2035.
+        </div>
+      </div>
+      <div class="tile-card">
+        <div class="tile-label">Quebec</div>
+        <div class="tile-value blue" style="font-size:1.4rem;">100% → 90%</div>
+        <div class="tile-desc">
+          The smallest rollback of the three — and the earliest, moving
+          before the federal review concluded. Near-term targets unchanged.
+        </div>
+      </div>
+    </div>
+
+    <div class="insight-box alert fade-in">
+      <div class="insight-label">Why this matters for the model</div>
+      <p class="insight-text" style="font-size:0.95rem;">
+        A single adoption curve can't capture this anymore. Every projection
+        in this chapter runs in <strong>two parallel scenarios</strong> —
+        original (pre-pause) and revised (post-rollback) — so the gap
+        between them becomes a measurable quantity rather than an
+        assumption buried in the model.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ── Section 4: Demand Projection ─────────────────────────────────── -->
+<section id="projection">
+  <div class="container">
+    <div class="section-header fade-in">
+      <div class="section-eyebrow">Demand Model · 2024–2035</div>
+      <h2>National EV demand roughly quadruples either way</h2>
+      <p>
+        Whether the original or revised mandate trajectory plays out, total
+        EV electricity demand grows substantially — the policy debate
+        changes the slope, not the direction.
+      </p>
+    </div>
+
+    <div class="two-col-grid fade-in">
+      <div class="info-card">
+        <div class="info-card-title">Original scenario</div>
+        <div class="stat-block">
+          <div class="stat-block-label">2024 demand</div>
+          <div class="stat-block-value">6.15 TWh</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-block-label">2035 demand</div>
+          <div class="stat-block-value" style="color:var(--amber);">27.51 TWh</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-block-label">Incremental load</div>
+          <div class="stat-block-value" style="font-size:1.4rem;">+21.36 TWh</div>
+        </div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">Revised scenario</div>
+        <div class="stat-block">
+          <div class="stat-block-label">2024 demand</div>
+          <div class="stat-block-value">6.14 TWh</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-block-label">2035 demand</div>
+          <div class="stat-block-value" style="color:var(--blue);">25.93 TWh</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-block-label">Incremental load</div>
+          <div class="stat-block-value" style="font-size:1.4rem;">+19.80 TWh</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="insight-box fade-in">
+      <div class="insight-label">The gap that matters</div>
+      <p class="insight-text" style="font-size:0.95rem;">
+        The mandate rollback shaves roughly <strong>1.6 TWh</strong> off national
+        incremental demand by 2035 — about 7% less growth. That's real, but
+        small relative to the ~20 TWh of new load arriving either way. The
+        physical grid stress this chapter measures doesn't meaningfully
+        change based on which policy version wins.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ── Section 5: Grid Stress ───────────────────────────────────────── -->
+<section id="stress">
+  <div class="container">
+    <div class="section-header fade-in">
+      <div class="section-eyebrow">Grid Stress Score · 2035, Revised Scenario</div>
+      <h2>The Prairies and the Maritimes carry the load</h2>
+      <p>
+        Stress score measures incremental EV demand as a share of each
+        province's available grid headroom. Quebec and Newfoundland —
+        both hydro-dominant — absorb the new load easily. Five
+        mid-sized, fossil-leaning grids do not.
+      </p>
+    </div>
+
+    <div class="info-card fade-in">
+      <div class="info-card-title">Grid stress score by province — 2035 (revised mandate scenario)</div>
+      <table class="results-table">
+        <thead>
+          <tr>
+            <th>Province</th>
+            <th class="num">Stress score</th>
+            <th>Category</th>
+            <th>Read</th>
+          </tr>
+        </thead>
+        <tbody id="stress-table-body"></tbody>
+      </table>
+      <div class="tile-desc" style="margin-top:14px;">
+        * Prince Edward Island excluded from the ranking above. Its 1.5 TWh
+        grid is small enough that percentage-based stress scores are
+        distorted by scale, and PEI imports roughly 60% of its electricity
+        from New Brunswick — its own generation capacity isn't the binding
+        constraint. PEI's raw score (87.4%) is reported separately rather
+        than blended into the provincial ranking.
+      </div>
+    </div>
+
+    <div class="two-col-grid fade-in">
+      <div class="info-card">
+        <div class="insight-label" style="color:var(--amber);margin-bottom:8px;">The stressed cluster</div>
+        <p style="color:var(--text-1);font-size:0.9rem;line-height:1.6;">
+          Saskatchewan, New Brunswick, Nova Scotia, Manitoba, and Alberta
+          cluster tightly between 43.5% and 48.8% — not coincidence. All
+          five run smaller-to-mid grids with limited hydro and heavier
+          reliance on fossil generation, leaving less headroom to absorb
+          new EV load than their population size would suggest.
+        </p>
+      </div>
+      <div class="info-card">
+        <div class="insight-label" style="margin-bottom:8px;">The hydro advantage</div>
+        <p style="color:var(--text-1);font-size:0.9rem;line-height:1.6;">
+          Quebec (16.9%) and Newfoundland (7.1%) sit far below the rest of
+          the country — both built on hydro capacity large relative to
+          their population. Ontario (26.8%) lands in between: the largest
+          grid in the country, but also the largest absolute EV fleet.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Chapter 3 Bridge ─────────────────────────────────────────────── -->
+<div class="bridge-section" id="chapter3">
+  <div class="container">
+    <div class="bridge-eyebrow">What's next</div>
+    <h2 class="bridge-heading">The stress points are mapped.<br><em>Can smart charging absorb the load the grid can't?</em></h2>
+    <p class="bridge-sub">
+      Chapter 2 identified where the grid will feel the EV demand shock
+      first — and confirmed it happens under either policy scenario.
+      Chapter 3 builds machine learning models to predict peak demand
+      and simulate smart-charging systems against these exact hotspots:
+    </p>
+
+    <ul class="bridge-list">
+      <li>Saskatchewan, New Brunswick, Nova Scotia — highest stress, smallest margin for error</li>
+      <li>Manitoba, Alberta — moderate stress, large absolute populations</li>
+      <li>Heavy freight depot charging — concentrated, instantaneous load spikes</li>
+      <li>Off-peak load shifting — can smart charging close the gap without new generation?</li>
+    </ul>
+
+    <div class="chapter-map">
+      <div class="ch-row">
+        <span class="ch-num">Ch.1</span>
+        <span>Energy baseline — Canada's transportation energy landscape, 2000–2023</span>
+        <span class="ch-badge badge-done">✓ Complete</span>
+      </div>
+      <div class="ch-row current">
+        <span class="ch-num">Ch.2</span>
+        <span>EV explosion — adoption modeling, demand projection, grid stress scoring</span>
+        <span class="ch-badge badge-current">You are here</span>
+      </div>
+      <div class="ch-row">
+        <span class="ch-num">Ch.3</span>
+        <span>AI grid optimization — peak demand model + smart charging simulation</span>
+        <span class="ch-badge badge-done">✓ Complete</span>
+      </div>
+      <div class="ch-row">
+        <span class="ch-num">Ch.4</span>
+        <span>EV charging infrastructure equity — neighbourhood-level access gaps</span>
+        <span class="ch-badge badge-done">✓ Complete</span>
+      </div>
+    </div>
+
+    <div class="tools-row">
+      <span class="tool-tag">Python</span>
+      <span class="tool-tag">pandas</span>
+      <span class="tool-tag">matplotlib</span>
+      <span class="tool-tag">numpy</span>
+      <span class="tool-tag">04_download_inspect_ev.py</span>
+      <span class="tool-tag">05_clean_ev.py</span>
+      <span class="tool-tag">06_ev_eda.py</span>
+      <span class="tool-tag">07_ev_demand_model.py</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── Footer ───────────────────────────────────────────────────────── -->
+<footer class="footer">
+  <div class="footer-inner">
+    <span>Built by <strong>Saeid Tayeban</strong> · York University · Toronto, ON</span>
+    <div class="footer-links">
+      <a href="https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=2310030801">StatCan 23-10-0308-01</a>
+      <a href="https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=2010002501">StatCan 20-10-0025-01</a>
+      <a href="canada_energy_chapter1.html">← Ch.1</a>
+      <a href="canada_energy_chapter3.html">Ch.3 →</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ── Data ────────────────────────────────────────────────────────────────────
+const data = {
+  provinceShare: [
+    { label: "BC", value: 7.9, max: 7.9, color: "var(--teal)"  },
+    { label: "QC", value: 7.0, max: 7.9, color: "var(--teal)"  },
+    { label: "ON", value: 4.5, max: 7.9, color: "var(--blue)" },
+    { label: "PE", value: 3.2, max: 7.9, color: "var(--blue)" },
+    { label: "NS", value: 2.9, max: 7.9, color: "var(--blue)" },
+    { label: "NB", value: 2.6, max: 7.9, color: "var(--blue)" },
+    { label: "MB", value: 2.4, max: 7.9, color: "var(--amber)" },
+    { label: "AB", value: 2.4, max: 7.9, color: "var(--amber)" },
+    { label: "NL", value: 2.1, max: 7.9, color: "var(--amber)" },
+    { label: "SK", value: 1.5, max: 7.9, color: "var(--red)"  },
+  ],
+  mandate: {
+    federal: [
+      { year: 2024, original: 5.2,  revised: 5.2  },
+      { year: 2026, original: 20.0, revised: 5.2  },
+      { year: 2030, original: 60.0, revised: 5.2  },
+      { year: 2035, original: 100.0,revised: 75.0 },
+    ],
+    bc: [
+      { year: 2024, original: 5.2,  revised: 5.2  },
+      { year: 2026, original: 26.0, revised: 26.0 },
+      { year: 2030, original: 100.0,revised: 26.0 },
+      { year: 2035, original: 100.0,revised: 75.0 },
+    ],
+    qc: [
+      { year: 2024, original: 5.2,  revised: 5.2  },
+      { year: 2026, original: 100.0,revised: 5.2  },
+      { year: 2030, original: 100.0,revised: 5.2  },
+      { year: 2035, original: 100.0,revised: 90.0 },
+    ],
+  },
+  stress: [
+    { prov: "Saskatchewan",            short: "SK", score: 48.8, cat: "moderate", read: "Fossil-heavy grid, limited hydro headroom" },
+    { prov: "New Brunswick",           short: "NB", score: 48.2, cat: "moderate", read: "Mid-sized grid, growing EV base" },
+    { prov: "Nova Scotia",             short: "NS", score: 48.0, cat: "moderate", read: "Coal-reliant generation mix" },
+    { prov: "Manitoba",                short: "MB", score: 44.8, cat: "moderate", read: "Hydro-based but smaller absolute capacity" },
+    { prov: "Alberta",                 short: "AB", score: 43.5, cat: "moderate", read: "Gas-heavy grid despite large economy" },
+    { prov: "Ontario",                 short: "ON", score: 26.8, cat: "moderate", read: "Largest grid, but also largest EV fleet" },
+    { prov: "Quebec",                  short: "QC", score: 16.9, cat: "low",      read: "Hydro-dominant, large surplus capacity" },
+    { prov: "Newfoundland and Labrador", short: "NL", score: 7.1, cat: "low",     read: "Churchill Falls hydro relative to small population" },
+  ],
+};
+
+// ── Build bar chart ──────────────────────────────────────────────────────────
+function buildBarChart(containerId, items, formatter) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  items.forEach(item => {
+    const pct = (item.value / item.max * 100).toFixed(1);
+    const row = document.createElement("div");
+    row.className = "bar-row";
+    row.innerHTML = `
+      <div class="bar-label">${item.label}</div>
+      <div class="bar-track">
+        <div class="bar-fill" data-width="${pct}" style="background:${item.color};"></div>
+      </div>
+      <div class="bar-val">${formatter ? formatter(item.value) : item.value}</div>
+    `;
+    el.appendChild(row);
+  });
+}
+buildBarChart("province-chart", data.provinceShare, v => v.toFixed(1) + "%");
+
+// ── Build stress table ───────────────────────────────────────────────────────
+function buildStressTable() {
+  const tbody = document.getElementById("stress-table-body");
+  if (!tbody) return;
+  const pillClass = { moderate: "amber", low: "teal" };
+  const sorted = [...data.stress].sort((a, b) => b.score - a.score);
+  sorted.forEach(row => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td><strong>${row.short}</strong> <span style="color:var(--text-2);font-weight:400;">${row.prov}</span></td>
+      <td class="num" style="font-weight:700;">${row.score.toFixed(1)}%</td>
+      <td><span class="pill ${pillClass[row.cat]}">${row.cat[0].toUpperCase() + row.cat.slice(1)}</span></td>
+      <td style="color:var(--text-2);font-size:0.82rem;">${row.read}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+  const sep = document.createElement("tr");
+  sep.className = "sep";
+  sep.innerHTML = `<td colspan="4"></td>`;
+  tbody.appendChild(sep);
+  const peiRow = document.createElement("tr");
+  peiRow.innerHTML = `
+    <td><strong>PE</strong> <span style="color:var(--text-2);font-weight:400;">Prince Edward Island *</span></td>
+    <td class="num" style="font-weight:700;">87.4%</td>
+    <td><span class="pill blue">Small grid *</span></td>
+    <td style="color:var(--text-2);font-size:0.82rem;">Imports ~60% of electricity from New Brunswick</td>
+  `;
+  tbody.appendChild(peiRow);
+}
+buildStressTable();
+
+// ── Build mandate scenario SVG line chart ────────────────────────────────────
+function buildMandateSVG() {
+  const svg = document.getElementById("mandate-svg");
+  if (!svg) return;
+
+  const W = 900, H = 240, pad = { t: 20, r: 110, b: 40, l: 50 };
+  const iW = W - pad.l - pad.r;
+  const iH = H - pad.t - pad.b;
+  const minX = 2024, maxX = 2035, minY = 0, maxY = 110;
+
+  function sx(year) { return pad.l + ((year - minX) / (maxX - minX)) * iW; }
+  function sy(v) { return pad.t + iH - ((v - minY) / (maxY - minY)) * iH; }
+
+  [0, 25, 50, 75, 100].forEach(y => {
+    const yy = sy(y);
+    svg.innerHTML += `<line x1="${pad.l}" y1="${yy}" x2="${W - pad.r}" y2="${yy}"
+      stroke="#1e2d45" stroke-width="1"/>
+      <text x="${pad.l - 8}" y="${yy + 4}" text-anchor="end"
+        font-size="11" fill="#6b7a96" font-family="Inter,sans-serif">${y}%</text>`;
+  });
+
+  const series = [
+    { data: data.mandate.federal, key: "original", color: "#6b7a96", dash: "4,3", label: "Federal (original)" },
+    { data: data.mandate.federal, key: "revised",  color: "#6b7a96", dash: "",    label: "Federal (revised)" },
+    { data: data.mandate.bc,      key: "original", color: "#00d4aa", dash: "4,3", label: "BC (original)" },
+    { data: data.mandate.bc,      key: "revised",  color: "#00d4aa", dash: "",    label: "BC (revised)" },
+    { data: data.mandate.qc,      key: "original", color: "#3b82f6", dash: "4,3", label: "QC (original)" },
+    { data: data.mandate.qc,      key: "revised",  color: "#3b82f6", dash: "",    label: "QC (revised)" },
+  ];
+
+  series.forEach(s => {
+    let path = `M ${sx(s.data[0].year)} ${sy(s.data[0][s.key])}`;
+    s.data.forEach((p, i) => { if (i > 0) path += ` L ${sx(p.year)} ${sy(p[s.key])}`; });
+    svg.innerHTML += `<path d="${path}" fill="none" stroke="${s.color}" stroke-width="2"
+      stroke-dasharray="${s.dash}" opacity="${s.dash ? 0.55 : 1}"/>`;
+    s.data.forEach(p => {
+      svg.innerHTML += `<circle cx="${sx(p.year)}" cy="${sy(p[s.key])}" r="3"
+        fill="${s.color}" stroke="#07090f" stroke-width="1.5" opacity="${s.dash ? 0.55 : 1}"/>`;
+    });
+  });
+
+  [2024, 2026, 2030, 2035].forEach(yr => {
+    svg.innerHTML += `<text x="${sx(yr)}" y="${H - pad.b + 18}" text-anchor="middle"
+      font-size="11" fill="#6b7a96" font-family="Inter,sans-serif">${yr}</text>`;
+  });
+
+  const legendItems = [
+    { color: "#6b7a96", label: "Federal" },
+    { color: "#00d4aa", label: "BC" },
+    { color: "#3b82f6", label: "QC" },
+  ];
+  legendItems.forEach((item, i) => {
+    const ly = pad.t + 10 + i * 22;
+    svg.innerHTML += `<line x1="${W - pad.r + 16}" y1="${ly}" x2="${W - pad.r + 36}" y2="${ly}"
+      stroke="${item.color}" stroke-width="2.5"/>
+      <text x="${W - pad.r + 42}" y="${ly + 4}" font-size="11" fill="#f0f4ff"
+        font-family="Inter,sans-serif">${item.label}</text>`;
+  });
+  svg.innerHTML += `<text x="${W - pad.r + 16}" y="${pad.t + 90}" font-size="10" fill="#6b7a96"
+    font-family="Inter,sans-serif">— solid = revised</text>
+    <text x="${W - pad.r + 16}" y="${pad.t + 104}" font-size="10" fill="#6b7a96"
+    font-family="Inter,sans-serif">- - dashed = original</text>`;
+}
+buildMandateSVG();
+
+// ── Counter animation ──────────────────────────────────────────────────────
+function animateCounter(el) {
+  if (el.dataset.animated === 'true') return;
+  el.dataset.animated = 'true';
+
+  const format   = el.dataset.format || '';
+  const target   = format === 'decimal1' ? parseFloat(el.dataset.target) : parseInt(el.dataset.target, 10);
+  const suffix   = el.dataset.suffix || '';
+  const duration = 1800;
+  const start    = performance.now();
+
+  function tick(now) {
+    const elapsed = now - start;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const raw = eased * target;
+    const value = format === 'decimal1' ? raw.toFixed(1)
+      : format === 'comma' ? Math.round(raw).toLocaleString('en-CA')
+      : Math.round(raw);
+    el.textContent = value + suffix;
+    if (progress < 1) requestAnimationFrame(tick);
+    else el.closest('.counter').classList.add('active');
+  }
+  requestAnimationFrame(tick);
+}
+
+// Hero counters are always above the fold on load — animate them directly
+// instead of waiting on IntersectionObserver (some browsers never fire the
+// initial callback for elements already in view when observation starts).
+document.querySelectorAll('.counter-value').forEach(el => animateCounter(el));
+
+// ── Intersection observer for scroll reveals ────────────────────────────────
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    entry.target.classList.add('visible');
+    io.unobserve(entry.target);
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.fade-in').forEach(el => io.observe(el));
+
+// ── Reveal bar fills once their card scrolls into view ──────────────────────
+const barIo = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    entry.target.querySelectorAll('.bar-fill[data-width]').forEach(bar => {
+      bar.style.width = bar.dataset.width + '%';
+    });
+    barIo.unobserve(entry.target);
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.info-card').forEach(el => barIo.observe(el));
+</script>
+
+</body>
+</html>

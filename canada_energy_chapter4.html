@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Canada Energy — Chapter 4: EV Charging Equity | Saeid Tayeban</title>
+<style>
+  /* ── Reset & base ─────────────────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg-0:     #07090f;
+    --bg-1:     #0d1221;
+    --bg-2:     #121929;
+    --bg-3:     #1a2235;
+    --bg-card:  #151e30;
+    --teal:     #00d4aa;
+    --teal-dim: #00a882;
+    --teal-glow:#00d4aa22;
+    --amber:    #f59e0b;
+    --amber-dim:#d97706;
+    --red:      #ef4444;
+    --blue:     #3b82f6;
+    --text-0:   #f0f4ff;
+    --text-1:   #a8b4cc;
+    --text-2:   #6b7a96;
+    --border:   #1e2d45;
+    --border-2: #2a3d5a;
+    --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg-0);
+    color: var(--text-0);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Typography ───────────────────────────────────────────────────── */
+  h1 { font-size: clamp(2.2rem, 5vw, 3.6rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; }
+  h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); font-weight: 700; letter-spacing: -0.02em; line-height: 1.2; }
+  h3 { font-size: 1.15rem; font-weight: 600; letter-spacing: -0.01em; }
+  p  { color: var(--text-1); max-width: 68ch; }
+  a  { color: var(--teal); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  em { color: var(--teal); font-style: normal; font-weight: 600; }
+
+  /* ── Layout ───────────────────────────────────────────────────────── */
+  .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+  section { padding: 96px 0; border-top: 1px solid var(--border); }
+  section:first-of-type { border-top: none; }
+
+  /* ── Nav ──────────────────────────────────────────────────────────── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(7,9,15,0.88); backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-inner {
+    display: flex; align-items: center; justify-content: space-between;
+    max-width: 900px; margin: 0 auto; padding: 0 24px; height: 52px;
+  }
+  .nav-brand {
+    font-size: 0.8rem; font-weight: 700; letter-spacing: 0.02em; color: var(--text-0);
+  }
+  .nav-links { display: flex; gap: 22px; list-style: none; }
+  .nav-links a { font-size: 0.8rem; color: var(--text-2); }
+  .nav-links a:hover { color: var(--text-0); text-decoration: none; }
+  .nav-back {
+    font-size: 0.78rem; color: var(--text-2);
+    padding: 4px 10px; border: 1px solid var(--border-2);
+    border-radius: 4px; transition: all 0.2s;
+  }
+  .nav-back:hover { color: var(--text-0); border-color: var(--teal); text-decoration: none; }
+
+  /* ── Hero ─────────────────────────────────────────────────────────── */
+  .hero { padding: 88px 0 72px; }
+  .hero-eyebrow {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--teal); margin-bottom: 24px;
+  }
+  .hero-eyebrow::before {
+    content: ''; display: block; width: 24px; height: 1px; background: var(--teal);
+  }
+
+  .hero h1 { margin-bottom: 28px; }
+  .hero h1 span { color: var(--teal); display: block; }
+
+  .hero-sub {
+    font-size: 1.05rem; color: var(--text-1); max-width: 62ch;
+    margin-bottom: 56px; line-height: 1.75;
+  }
+
+  /* ── Hero counters ────────────────────────────────────────────────── */
+  .counters {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 2px; border: 1px solid var(--border); border-radius: 10px;
+    overflow: hidden;
+  }
+  .counter {
+    background: var(--bg-card); padding: 28px 24px;
+    position: relative; overflow: hidden;
+  }
+  .counter::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0;
+    height: 2px; background: var(--teal); opacity: 0;
+    transition: opacity 0.4s;
+  }
+  .counter.active::before { opacity: 1; }
+  .counter-value {
+    font-size: 2.2rem; font-weight: 800; letter-spacing: -0.04em;
+    color: var(--teal); line-height: 1; margin-bottom: 8px;
+    font-variant-numeric: tabular-nums;
+  }
+  .counter-label {
+    font-size: 0.78rem; color: var(--text-2); line-height: 1.5;
+  }
+
+  /* ── Dataset band ─────────────────────────────────────────────────── */
+  .dataset-band {
+    background: var(--bg-2); border: 1px solid var(--border);
+    border-radius: 8px; padding: 20px 24px;
+    display: flex; gap: 32px; flex-wrap: wrap;
+    margin-top: 40px;
+  }
+  .ds-item { display: flex; flex-direction: column; gap: 2px; }
+  .ds-label { font-size: 0.7rem; color: var(--text-2); text-transform: uppercase; letter-spacing: 0.08em; }
+  .ds-value { font-size: 0.9rem; font-weight: 600; color: var(--text-0); }
+
+  /* ── Section headers ──────────────────────────────────────────────── */
+  .section-eyebrow {
+    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--teal);
+    margin-bottom: 12px;
+  }
+  .section-header { margin-bottom: 40px; }
+  .section-header h2 { margin-bottom: 16px; }
+
+  /* ── Method steps ─────────────────────────────────────────────────── */
+  .method-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 32px; }
+  .method-card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 24px; position: relative; overflow: hidden;
+  }
+  .method-step {
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--teal); margin-bottom: 10px;
+  }
+  .method-title { font-size: 1rem; font-weight: 700; margin-bottom: 8px; }
+  .method-desc { font-size: 0.84rem; color: var(--text-2); line-height: 1.6; }
+  .method-note {
+    background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.25);
+    border-radius: 8px; padding: 16px 20px; margin-top: 24px;
+    font-size: 0.84rem; color: var(--text-1); line-height: 1.6;
+  }
+  .method-note strong { color: var(--amber); }
+
+  /* ── Density contrast cards ───────────────────────────────────────── */
+  .province-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 32px; }
+
+  .prov-card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 28px; position: relative; overflow: hidden;
+  }
+  .prov-card::after {
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+    height: 3px;
+  }
+  .prov-card.lowdensity::after  { background: var(--teal); }
+  .prov-card.highdensity::after { background: var(--amber); }
+
+  .prov-name {
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; margin-bottom: 6px;
+  }
+  .prov-card.lowdensity  .prov-name { color: var(--teal); }
+  .prov-card.highdensity .prov-name { color: var(--amber); }
+
+  .prov-headline { font-size: 1.6rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 4px; }
+  .prov-sub { font-size: 0.82rem; color: var(--text-2); margin-bottom: 20px; }
+
+  .prov-stats { display: flex; flex-direction: column; gap: 10px; }
+  .prov-stat {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 8px 0; border-bottom: 1px solid var(--border);
+    font-size: 0.82rem;
+  }
+  .prov-stat:last-child { border-bottom: none; }
+  .prov-stat-label { color: var(--text-2); }
+  .prov-stat-value { font-weight: 700; font-size: 0.88rem; }
+  .prov-card.lowdensity  .prov-stat-value { color: var(--teal); }
+  .prov-card.highdensity .prov-stat-value { color: var(--amber); }
+
+  /* ── Results table (reused for gap + worst-case tables) ─────────────── */
+  .results-table {
+    width: 100%; border-collapse: collapse; margin-top: 32px;
+    font-size: 0.84rem;
+  }
+  .results-table thead tr { border-bottom: 2px solid var(--border-2); }
+  .results-table th {
+    text-align: left; padding: 10px 14px;
+    font-size: 0.68rem; font-weight: 600; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-2);
+  }
+  .results-table th:not(:first-child):not(:nth-child(2)) { text-align: right; }
+  .results-table td { padding: 11px 14px; border-bottom: 1px solid var(--border); }
+  .results-table td:not(:first-child):not(:nth-child(2)) { text-align: right; font-variant-numeric: tabular-nums; }
+  .results-table tbody tr:hover { background: var(--bg-2); }
+
+  .prov-tag {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-weight: 700; font-size: 0.78rem;
+  }
+  .prov-tag .dot { width: 6px; height: 6px; border-radius: 50%; }
+  .prov-tag.low  .dot { background: var(--teal); }
+  .prov-tag.high .dot { background: var(--amber); }
+  .prov-tag.low  { color: var(--teal); }
+  .prov-tag.high { color: var(--amber); }
+
+  .zero-flag {
+    display: inline-block; font-size: 0.72rem; font-weight: 700;
+    color: var(--red); background: rgba(239,68,68,0.1);
+    padding: 2px 8px; border-radius: 4px;
+  }
+
+  /* ── Key insight callout ──────────────────────────────────────────── */
+  .insight-box {
+    background: linear-gradient(135deg, rgba(0,212,170,0.06) 0%, rgba(0,212,170,0.02) 100%);
+    border: 1px solid rgba(0, 212, 170, 0.3);
+    border-radius: 10px; padding: 32px 36px; margin-top: 40px;
+    position: relative; overflow: hidden;
+  }
+  .insight-box::before {
+    content: ''; position: absolute; top: 0; left: 0;
+    width: 3px; height: 100%; background: var(--teal);
+  }
+  .insight-label {
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--teal); margin-bottom: 12px;
+  }
+  .insight-text { font-size: 1.05rem; color: var(--text-0); line-height: 1.75; max-width: none; }
+
+  /* ── Data sources ─────────────────────────────────────────────────── */
+  .sources-row {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;
+    margin-top: 32px;
+  }
+  .source-card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 8px; padding: 18px 20px;
+  }
+  .source-label {
+    font-size: 0.68rem; color: var(--text-2); text-transform: uppercase;
+    letter-spacing: 0.08em; margin-bottom: 4px;
+  }
+  .source-name { font-size: 0.84rem; font-weight: 600; color: var(--text-0); margin-bottom: 2px; }
+  .source-meta { font-size: 0.76rem; color: var(--text-2); }
+
+  /* ── Tools row ────────────────────────────────────────────────────── */
+  .tools-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+  .tool-tag {
+    font-size: 0.75rem; font-family: var(--font-mono);
+    background: var(--bg-3); border: 1px solid var(--border-2);
+    padding: 4px 10px; border-radius: 4px; color: var(--text-1);
+  }
+
+  /* ── Chapter bridge / closer ──────────────────────────────────────── */
+  .bridge-section {
+    background: var(--bg-1); border-top: 1px solid var(--border);
+    padding: 88px 0;
+  }
+  .bridge-eyebrow {
+    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--text-2); margin-bottom: 8px;
+  }
+  .bridge-heading { font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 800; margin-bottom: 20px; }
+  .bridge-heading em { color: var(--teal); font-style: normal; display: block; }
+  .bridge-sub { font-size: 0.95rem; color: var(--text-1); max-width: 58ch; margin-bottom: 32px; }
+
+  .bridge-list { list-style: none; margin-bottom: 36px; display: flex; flex-direction: column; gap: 10px; }
+  .bridge-list li {
+    display: flex; align-items: baseline; gap: 10px;
+    font-size: 0.84rem; color: var(--text-1);
+  }
+  .bridge-list li::before {
+    content: '→'; color: var(--teal); font-weight: 700; flex-shrink: 0;
+  }
+
+  /* ── Chapter map ──────────────────────────────────────────────────── */
+  .chapter-map {
+    display: flex; flex-direction: column; gap: 8px; margin-top: 40px;
+    padding-top: 32px; border-top: 1px solid var(--border);
+  }
+  .ch-row {
+    display: flex; align-items: center; gap: 14px;
+    padding: 10px 14px; border-radius: 6px;
+    font-size: 0.82rem; color: var(--text-2);
+  }
+  .ch-row.current {
+    background: rgba(0, 212, 170, 0.06);
+    border: 1px solid rgba(0, 212, 170, 0.2);
+    color: var(--text-0);
+  }
+  .ch-row.done { color: var(--text-1); }
+  .ch-num {
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em;
+    width: 28px; flex-shrink: 0; font-family: var(--font-mono);
+  }
+  .ch-row.current .ch-num { color: var(--teal); }
+  .ch-row.done .ch-num    { color: var(--teal-dim); }
+  .ch-badge {
+    margin-left: auto; font-size: 0.68rem; padding: 2px 8px;
+    border-radius: 3px;
+  }
+  .badge-done    { background: rgba(0, 212, 170, 0.12); color: var(--teal); }
+  .badge-current { background: rgba(0, 212, 170, 0.12); color: var(--teal); }
+  .badge-planned { background: rgba(107, 122, 150, 0.12); color: var(--text-2); }
+
+  /* ── Footer ───────────────────────────────────────────────────────── */
+  .footer {
+    border-top: 1px solid var(--border); padding: 32px 0;
+    font-size: 0.78rem; color: var(--text-2);
+  }
+  .footer-inner {
+    max-width: 900px; margin: 0 auto; padding: 0 24px;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 12px;
+  }
+  .footer-links { display: flex; gap: 16px; }
+  .footer-links a { color: var(--text-2); font-size: 0.78rem; }
+  .footer-links a:hover { color: var(--teal); }
+
+  /* ── Responsive ───────────────────────────────────────────────────── */
+  @media (max-width: 680px) {
+    .counters       { grid-template-columns: 1fr; }
+    .province-grid  { grid-template-columns: 1fr; }
+    .method-grid    { grid-template-columns: 1fr; }
+    .sources-row    { grid-template-columns: 1fr; }
+    .nav-links      { display: none; }
+    .results-table  { font-size: 0.74rem; }
+  }
+
+  /* ── Animations ───────────────────────────────────────────────────── */
+  .fade-in { opacity: 0; transform: translateY(18px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fade-in { opacity: 1; transform: none; transition: none; }
+    * { animation: none !important; }
+  }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- ── Nav ──────────────────────────────────────────────────────────── -->
+<nav>
+  <div class="nav-inner">
+    <span class="nav-brand">Canada Energy / Ch.4</span>
+    <ul class="nav-links">
+      <li><a href="#overview">Overview</a></li>
+      <li><a href="#method">Method</a></li>
+      <li><a href="#gap">The Gap</a></li>
+      <li><a href="#worst">Worst Cases</a></li>
+      <li><a href="#sources">Sources</a></li>
+    </ul>
+    <a href="canada_energy_chapter3.html" class="nav-back">← Ch.3</a>
+  </div>
+</nav>
+
+<!-- ── Hero ─────────────────────────────────────────────────────────── -->
+<section class="hero" id="overview">
+  <div class="container">
+    <div class="hero-eyebrow">Data Analysis Portfolio · Chapter 4 of 4</div>
+    <h1>Does the charging network<br><span>reach where it's needed?</span></h1>
+    <p class="hero-sub">
+      Chapter 3 modeled how smart charging protects the grid at the provincial
+      level. Chapter 4 zooms all the way into the neighbourhood: 16,283 public
+      charging stations, mapped against 5,433 Canadian neighbourhoods by income
+      and dwelling type. Homeowners can charge in their driveway regardless of
+      income. Apartment renters can't — and that's exactly where the gap shows up.
+    </p>
+
+    <div class="counters">
+      <div class="counter" id="c1">
+        <div class="counter-value" data-target="2297" data-suffix="" data-format="comma">0</div>
+        <div class="counter-label">Neighbourhoods with zero<br>public charging stations</div>
+      </div>
+      <div class="counter" id="c2">
+        <div class="counter-value" data-target="4" data-suffix="×">0</div>
+        <div class="counter-label">Charging-desert gap, poorest vs.<br>richest quintile, apartment areas</div>
+      </div>
+      <div class="counter" id="c3">
+        <div class="counter-value" data-target="16264" data-suffix="" data-format="comma">0</div>
+        <div class="counter-label">Stations matched to a<br>neighbourhood by geo-join</div>
+      </div>
+    </div>
+
+    <div class="dataset-band fade-in">
+      <div class="ds-item">
+        <span class="ds-label">Charging stations</span>
+        <span class="ds-value">NRCan / AFDC EVSE — 16,283 stations</span>
+      </div>
+      <div class="ds-item">
+        <span class="ds-label">Neighbourhood data</span>
+        <span class="ds-value">StatCan Census Profile, ADAs</span>
+      </div>
+      <div class="ds-item">
+        <span class="ds-label">EV demand model</span>
+        <span class="ds-value">Ch.2 registrations, population-scaled</span>
+      </div>
+      <div class="ds-item">
+        <span class="ds-label">Geography</span>
+        <span class="ds-value">5,433 Aggregate Dissemination Areas</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Method ───────────────────────────────────────────────────────── -->
+<section id="method">
+  <div class="container">
+    <div class="section-header fade-in">
+      <div class="section-eyebrow">Method</div>
+      <h2>Three datasets, stitched together<br>by location.</h2>
+      <p>
+        No single StatCan table has EV counts, income, and dwelling type at
+        the neighbourhood level. This chapter builds that view by joining
+        three separate sources on geography rather than waiting for one that
+        doesn't exist.
+      </p>
+    </div>
+
+    <div class="method-grid">
+      <div class="method-card fade-in">
+        <div class="method-step">Step 1</div>
+        <div class="method-title">Geo-join stations to neighbourhoods</div>
+        <div class="method-desc">
+          Every station's lat/long is matched to its Aggregate Dissemination
+          Area via a point-in-polygon spatial join against StatCan's ADA
+          cartographic boundary file. 16,264 of 16,283 stations matched cleanly.
+        </div>
+      </div>
+      <div class="method-card fade-in">
+        <div class="method-step">Step 2</div>
+        <div class="method-title">Classify each neighbourhood</div>
+        <div class="method-desc">
+          Every ADA is tagged by its dominant dwelling type (house vs. apartment
+          — a proxy for whether home charging is realistic) and its income
+          quintile, from the 2021 Census Profile.
+        </div>
+      </div>
+      <div class="method-card fade-in">
+        <div class="method-step">Step 3</div>
+        <div class="method-title">Model EV demand locally</div>
+        <div class="method-desc">
+          StatCan vehicle registrations only go down to the province level.
+          Each neighbourhood's EV count is modeled as its share of provincial
+          population × the province's total registered EVs (Ch.2 data, 2024).
+        </div>
+      </div>
+      <div class="method-card fade-in">
+        <div class="method-step">Step 4</div>
+        <div class="method-title">Score the gap</div>
+        <div class="method-desc">
+          Charging ports per 1,000 modeled EVs, computed per neighbourhood and
+          cross-tabbed against income and dwelling density to find where
+          need and supply are furthest apart.
+        </div>
+      </div>
+    </div>
+
+    <div class="method-note">
+      <strong>Honest caveat:</strong> EV counts here are modeled, not measured —
+      scaled down from province totals by population share, since StatCan
+      doesn't publish registrations below the province level. Ratios and
+      rankings in this chapter should be read as directional, not exact counts.
+    </div>
+  </div>
+</section>
+
+<!-- ── The gap ──────────────────────────────────────────────────────── -->
+<section id="gap">
+  <div class="container">
+    <div class="section-header fade-in">
+      <div class="section-eyebrow">Income × dwelling density</div>
+      <h2>Income only predicts the gap<br>where home charging isn't an option.</h2>
+      <p>
+        In low-density neighbourhoods (houses, driveways), charging-desert rates
+        barely track income — most people don't need a public charger. In
+        apartment-dominant neighbourhoods, where public charging is often the
+        <em>only</em> option, the pattern flips hard.
+      </p>
+    </div>
+
+    <div class="province-grid">
+      <div class="prov-card highdensity fade-in">
+        <div class="prov-name">Apartment-dominant · Q1 (poorest)</div>
+        <div class="prov-headline">27.9%</div>
+        <div class="prov-sub">Of these neighbourhoods have zero charging stations</div>
+        <div class="prov-stats">
+          <div class="prov-stat"><span class="prov-stat-label">Neighbourhoods (ADAs)</span><span class="prov-stat-value">287</span></div>
+          <div class="prov-stat"><span class="prov-stat-label">Median ports / 1,000 EVs</span><span class="prov-stat-value">17.7</span></div>
+          <div class="prov-stat"><span class="prov-stat-label">Modeled EVs in this group</span><span class="prov-stat-value">95,714</span></div>
+        </div>
+      </div>
+
+      <div class="prov-card lowdensity fade-in">
+        <div class="prov-name">Apartment-dominant · Q5 (richest)</div>
+        <div class="prov-headline">7.1%</div>
+        <div class="prov-sub">Of these neighbourhoods have zero charging stations</div>
+        <div class="prov-stats">
+          <div class="prov-stat"><span class="prov-stat-label">Neighbourhoods (ADAs)</span><span class="prov-stat-value">127</span></div>
+          <div class="prov-stat"><span class="prov-stat-label">Median ports / 1,000 EVs</span><span class="prov-stat-value">41.5</span></div>
+          <div class="prov-stat"><span class="prov-stat-label">Modeled EVs in this group</span><span class="prov-stat-value">50,297</span></div>
+        </div>
+      </div>
+    </div>
+
+    <table class="results-table fade-in">
+      <thead>
+        <tr>
+          <th>Income quintile</th>
+          <th>Density group</th>
+          <th>ADAs</th>
+          <th>% zero infra</th>
+          <th>Median ports / 1,000 EVs</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Q1 · lowest</td>
+          <td><span class="prov-tag high"><span class="dot"></span>Apartment-dominant</span></td>
+          <td>287</td>
+          <td><span class="zero-flag">27.9%</span></td>
+          <td>17.70</td>
+        </tr>
+        <tr>
+          <td>Q2</td>
+          <td><span class="prov-tag high"><span class="dot"></span>Apartment-dominant</span></td>
+          <td>276</td>
+          <td>23.2%</td>
+          <td>21.70</td>
+        </tr>
+        <tr>
+          <td>Q3</td>
+          <td><span class="prov-tag high"><span class="dot"></span>Apartment-dominant</span></td>
+          <td>153</td>
+          <td>15.0%</td>
+          <td>30.10</td>
+        </tr>
+        <tr>
+          <td>Q4</td>
+          <td><span class="prov-tag high"><span class="dot"></span>Apartment-dominant</span></td>
+          <td>115</td>
+          <td>9.6%</td>
+          <td>31.40</td>
+        </tr>
+        <tr>
+          <td>Q5 · highest</td>
+          <td><span class="prov-tag high"><span class="dot"></span>Apartment-dominant</span></td>
+          <td>127</td>
+          <td>7.1%</td>
+          <td>41.50</td>
+        </tr>
+        <tr>
+          <td>Q1 · lowest</td>
+          <td><span class="prov-tag low"><span class="dot"></span>House-dominant</span></td>
+          <td>629</td>
+          <td>65.2%</td>
+          <td>0.00</td>
+        </tr>
+        <tr>
+          <td>Q2</td>
+          <td><span class="prov-tag low"><span class="dot"></span>House-dominant</span></td>
+          <td>706</td>
+          <td>33.1%</td>
+          <td>17.65</td>
+        </tr>
+        <tr>
+          <td>Q3</td>
+          <td><span class="prov-tag low"><span class="dot"></span>House-dominant</span></td>
+          <td>739</td>
+          <td>29.8%</td>
+          <td>16.80</td>
+        </tr>
+        <tr>
+          <td>Q4</td>
+          <td><span class="prov-tag low"><span class="dot"></span>House-dominant</span></td>
+          <td>806</td>
+          <td>32.8%</td>
+          <td>13.50</td>
+        </tr>
+        <tr>
+          <td>Q5 · highest</td>
+          <td><span class="prov-tag low"><span class="dot"></span>House-dominant</span></td>
+          <td>750</td>
+          <td>35.5%</td>
+          <td>11.50</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="insight-box fade-in">
+      <div class="insight-label">Key finding</div>
+      <p class="insight-text">
+        Among house-dominant neighbourhoods, zero-infrastructure rates are
+        roughly flat across income — <em>because these households mostly
+        don't need public chargers</em>. Among apartment-dominant
+        neighbourhoods, where public charging is frequently the only option,
+        the poorest quintile is <strong style="color:var(--amber)">4× more likely</strong>
+        to have zero stations than the richest. The gap tracks need, not
+        preference — and it's showing up exactly where renters have no
+        alternative.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ── Worst cases ──────────────────────────────────────────────────── -->
+<section id="worst">
+  <div class="container">
+    <div class="section-header fade-in">
+      <div class="section-eyebrow">Equity score · worst gaps</div>
+      <h2>Where demand exists and<br>supply is exactly zero.</h2>
+      <p>
+        Ranking every neighbourhood by an equity-weighted gap score — supply
+        relative to modeled demand, weighted up for lower-income areas —
+        surfaces a concentrated, addressable list rather than an abstract
+        national average.
+      </p>
+    </div>
+
+    <table class="results-table fade-in">
+      <thead>
+        <tr>
+          <th>Neighbourhood (ADA)</th>
+          <th>Province</th>
+          <th>Income</th>
+          <th>Modeled EVs</th>
+          <th>Stations</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>35200055</td><td>Ontario</td><td>Q1 · lowest</td><td>358.7</td><td><span class="zero-flag">0</span></td></tr>
+        <tr><td>59490017</td><td>British Columbia</td><td>Q1 · lowest</td><td>25.4</td><td><span class="zero-flag">0</span></td></tr>
+        <tr><td>10010021</td><td>Newfoundland &amp; Labrador</td><td>Q1 · lowest</td><td>162.5</td><td><span class="zero-flag">0</span></td></tr>
+        <tr><td>10010037</td><td>Newfoundland &amp; Labrador</td><td>Q1 · lowest</td><td>88.2</td><td><span class="zero-flag">0</span></td></tr>
+        <tr><td>35200054</td><td>Ontario</td><td>Q1 · lowest</td><td>234.6</td><td><span class="zero-flag">0</span></td></tr>
+        <tr><td>59590002</td><td>British Columbia</td><td>Q1 · lowest</td><td>24.0</td><td><span class="zero-flag">0</span></td></tr>
+        <tr><td>59490015</td><td>British Columbia</td><td>Q1 · lowest</td><td>25.8</td><td><span class="zero-flag">0</span></td></tr>
+        <tr><td>59490029</td><td>British Columbia</td><td>Q1 · lowest</td><td>29.1</td><td><span class="zero-flag">0</span></td></tr>
+      </tbody>
+    </table>
+
+    <div class="insight-box fade-in">
+      <div class="insight-label">Key finding</div>
+      <p class="insight-text">
+        Of the 2,297 zero-infrastructure neighbourhoods, <strong>1,503 already
+        have real modeled EV demand</strong> — meaning EV adoption is outrunning
+        infrastructure, not waiting for it. The worst individual gaps cluster
+        in Ontario, British Columbia, and Newfoundland &amp; Labrador,
+        overwhelmingly in the lowest income quintile.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ── Sources ──────────────────────────────────────────────────────── -->
+<section id="sources">
+  <div class="container">
+    <div class="section-header fade-in">
+      <div class="section-eyebrow">Data + methodology</div>
+      <h2>Public data. Transparent joins.</h2>
+      <p>
+        Every source here is publicly available. The pipeline runs in three
+        scripts: download + inspect → classify + geo-join → gap model.
+      </p>
+    </div>
+
+    <div class="sources-row fade-in">
+      <div class="source-card">
+        <div class="source-label">Charging stations</div>
+        <div class="source-name">NRCan / AFDC EVSE database</div>
+        <div class="source-meta">evse_canada.csv · 16,283 stations · Level 2 + DC Fast</div>
+      </div>
+      <div class="source-card">
+        <div class="source-label">Neighbourhood census data</div>
+        <div class="source-name">StatCan Census Profile 2021 (98-401-X2021012)</div>
+        <div class="source-meta">Aggregate dissemination areas · income + dwelling type</div>
+      </div>
+      <div class="source-card">
+        <div class="source-label">Neighbourhood boundaries</div>
+        <div class="source-name">StatCan ADA cartographic boundary file</div>
+        <div class="source-meta">lada000b21a_e.shp · 5,433 polygons, EPSG:3347</div>
+      </div>
+      <div class="source-card">
+        <div class="source-label">EV demand baseline</div>
+        <div class="source-name">Ch.2 registrations</div>
+        <div class="source-meta">ev_annual_clean.csv · province × segment × fuel, 2024</div>
+      </div>
+    </div>
+
+    <div class="tools-row fade-in">
+      <span class="tool-tag">Python</span>
+      <span class="tool-tag">pandas</span>
+      <span class="tool-tag">geopandas</span>
+      <span class="tool-tag">shapely</span>
+      <span class="tool-tag">11_download_inspect.py</span>
+      <span class="tool-tag">12_clean.py</span>
+      <span class="tool-tag">12b_geojoin.py</span>
+      <span class="tool-tag">13_eda_gap_model.py</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── Closer ───────────────────────────────────────────────────────── -->
+<div class="bridge-section" id="closer">
+  <div class="container">
+    <div class="bridge-eyebrow">Project complete</div>
+    <h2 class="bridge-heading">The picture is drawn end to end.<br><em>Grid → fleet → peak → street.</em></h2>
+    <p class="bridge-sub">
+      Chapter 1 showed Canada's grid decarbonizing while its roads didn't.
+      Chapter 2 modeled the EV demand shock heading for that grid. Chapter 3
+      showed smart charging can absorb most of that shock — but not forever,
+      and not evenly by province. Chapter 4 closes the loop at street level:
+      even where the grid and the fleet are accounted for, the physical
+      charging network itself is unevenly built, and it tracks income exactly
+      where people have no alternative.
+    </p>
+
+    <div class="chapter-map">
+      <div class="ch-row done">
+        <span class="ch-num">Ch.1</span>
+        <span>Energy baseline — Canada's transportation energy landscape, 2000–2023</span>
+        <span class="ch-badge badge-done">✓ Complete</span>
+      </div>
+      <div class="ch-row done">
+        <span class="ch-num">Ch.2</span>
+        <span>EV explosion — adoption modeling, demand projection, grid stress scoring</span>
+        <span class="ch-badge badge-done">✓ Complete</span>
+      </div>
+      <div class="ch-row done">
+        <span class="ch-num">Ch.3</span>
+        <span>AI grid optimization — peak demand model + smart charging simulation</span>
+        <span class="ch-badge badge-done">✓ Complete</span>
+      </div>
+      <div class="ch-row current">
+        <span class="ch-num">Ch.4</span>
+        <span>EV charging infrastructure equity — neighbourhood-level access gaps</span>
+        <span class="ch-badge badge-current">You are here</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Footer ───────────────────────────────────────────────────────── -->
+<footer class="footer">
+  <div class="footer-inner">
+    <span>Built by <strong>Saeid Tayeban</strong> · York University · Toronto, ON</span>
+    <div class="footer-links">
+      <a href="https://afdc.energy.gov/stations">AFDC / EVSE Data</a>
+      <a href="https://www12.statcan.gc.ca/census-recensement/2021/dp-pd/prof/index.cfm">StatCan Census Profile</a>
+      <a href="canada_energy_chapter3.html">← Ch.3</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ── Counter animation ──────────────────────────────────────────────────
+function animateCounter(el) {
+  if (el.dataset.animated === 'true') return;
+  el.dataset.animated = 'true';
+
+  const target   = parseInt(el.dataset.target);
+  const suffix   = el.dataset.suffix || '';
+  const format   = el.dataset.format || '';
+  const duration = 1800;
+  const start    = performance.now();
+
+  function tick(now) {
+    const elapsed = now - start;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const value = Math.round(eased * target);
+    el.textContent = (format === 'comma'
+      ? value.toLocaleString('en-CA')
+      : value) + suffix;
+    if (progress < 1) requestAnimationFrame(tick);
+    else el.closest('.counter').classList.add('active');
+  }
+  requestAnimationFrame(tick);
+}
+
+// ── Intersection observer ──────────────────────────────────────────────
+document.querySelectorAll('.counter-value').forEach(el => animateCounter(el));
+
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    entry.target.classList.add('visible');
+    io.unobserve(entry.target);
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.fade-in').forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>

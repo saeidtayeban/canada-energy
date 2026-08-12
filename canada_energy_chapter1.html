@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Canada Energy — Chapter 1: The Baseline | Saeid Tayeban</title>
+<style>
+  /* ── Reset & base ─────────────────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg-0:     #07090f;
+    --bg-1:     #0d1221;
+    --bg-2:     #121929;
+    --bg-3:     #1a2235;
+    --bg-card:  #151e30;
+    --teal:     #00d4aa;
+    --teal-dim: #00a882;
+    --teal-glow:#00d4aa22;
+    --amber:    #f59e0b;
+    --amber-dim:#d97706;
+    --red:      #ef4444;
+    --blue:     #3b82f6;
+    --text-0:   #f0f4ff;
+    --text-1:   #a8b4cc;
+    --text-2:   #6b7a96;
+    --border:   #1e2d45;
+    --border-2: #2a3d5a;
+    --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg-0);
+    color: var(--text-0);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Typography ───────────────────────────────────────────────────── */
+  h1 { font-size: clamp(2.2rem, 5vw, 3.6rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; }
+  h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); font-weight: 700; letter-spacing: -0.02em; line-height: 1.2; }
+  h3 { font-size: 1.15rem; font-weight: 600; letter-spacing: -0.01em; }
+  p  { color: var(--text-1); max-width: 68ch; }
+  a  { color: var(--teal); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  em { color: var(--teal); font-style: normal; font-weight: 600; }
+
+  /* ── Layout ───────────────────────────────────────────────────────── */
+  .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+  section { padding: 96px 0; border-top: 1px solid var(--border); }
+  section:first-of-type { border-top: none; }
+
+  /* ── Nav ──────────────────────────────────────────────────────────── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(7,9,15,0.88); backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-inner {
+    display: flex; align-items: center; justify-content: space-between;
+    max-width: 900px; margin: 0 auto; padding: 0 24px; height: 52px;
+  }
+  .nav-brand {
+    font-size: 0.8rem; font-weight: 700; letter-spacing: 0.02em; color: var(--text-0);
+  }
+  .nav-links { display: flex; gap: 22px; list-style: none; }
+  .nav-links a { font-size: 0.8rem; color: var(--text-2); }
+  .nav-links a:hover { color: var(--text-0); text-decoration: none; }
+  .nav-back {
+    font-size: 0.78rem; color: var(--text-2);
+    padding: 4px 10px; border: 1px solid var(--border-2);
+    border-radius: 4px; transition: all 0.2s;
+  }
+  .nav-back:hover { color: var(--text-0); border-color: var(--teal); text-decoration: none; }
+
+  /* ── Hero ─────────────────────────────────────────────────────────── */
+  .hero { padding: 88px 0 72px; }
+  .hero-eyebrow {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--teal); margin-bottom: 24px;
+  }
+  .hero-eyebrow::before {
+    content: ''; display: block; width: 24px; height: 1px; background: var(--teal);
+  }
+
+  .hero h1 { margin-bottom: 28px; }
+  .hero h1 span { color: var(--teal); display: block; }
+
+  .hero-sub {
+    font-size: 1.05rem; color: var(--text-1); max-width: 62ch;
+    margin-bottom: 56px; line-height: 1.75;
+  }
+
+  /* ── Hero counters ────────────────────────────────────────────────── */
+  .counters {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 2px; border: 1px solid var(--border); border-radius: 10px;
+    overflow: hidden;
+  }
+  .counter {
+    background: var(--bg-card); padding: 28px 24px;
+    position: relative; overflow: hidden;
+  }
+  .counter::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0;
+    height: 2px; background: var(--teal); opacity: 0;
+    transition: opacity 0.4s;
+  }
+  .counter.active::before { opacity: 1; }
+  .counter-value {
+    font-size: 2.2rem; font-weight: 800; letter-spacing: -0.04em;
+    color: var(--teal); line-height: 1; margin-bottom: 8px;
+    font-variant-numeric: tabular-nums;
+  }
+  .counter-value.amber { color: var(--amber); }
+  .counter-value.red   { color: var(--red); }
+  .counter-label {
+    font-size: 0.78rem; color: var(--text-2); line-height: 1.5;
+  }
+
+  /* ── Dataset band ─────────────────────────────────────────────────── */
+  .dataset-band {
+    background: var(--bg-2); border: 1px solid var(--border);
+    border-radius: 8px; padding: 20px 24px;
+    display: flex; gap: 32px; flex-wrap: wrap;
+    margin-top: 40px;
+  }
+  .ds-item { display: flex; flex-direction: column; gap: 2px; }
+  .ds-label { font-size: 0.7rem; color: var(--text-2); text-transform: uppercase; letter-spacing: 0.08em; }
+  .ds-value { font-size: 0.9rem; font-weight: 600; color: var(--text-0); }
+
+  /* ── Section headers ──────────────────────────────────────────────── */
+  .section-eyebrow {
+    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--teal);
+    margin-bottom: 12px;
+  }
+  .section-header { margin-bottom: 40px; }
+  .section-header h2 { margin-bottom: 16px; }
+
+  /* ── Generic info card ───────────────────────────────────────────── */
+  .info-card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 28px 32px;
+  }
+  .info-card-title {
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-2); margin-bottom: 24px;
+  }
+  .two-col-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 32px; }
+  .stat-block + .stat-block { margin-top: 20px; }
+  .stat-block-label { font-size: 0.78rem; color: var(--text-2); margin-bottom: 6px; }
+  .stat-block-value { font-size: 1.8rem; font-weight: 800; letter-spacing: -0.03em; }
+
+  /* ── Tile grid (segment / intensity style cards) ─────────────────── */
+  .tile-grid { display: grid; gap: 16px; margin-top: 32px; }
+  .tile-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+  .tile-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+  .tile-card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 24px;
+  }
+  .tile-label {
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-2); margin-bottom: 12px;
+  }
+  .tile-value { font-size: 1.9rem; font-weight: 800; letter-spacing: -0.03em; line-height: 1; margin-bottom: 6px; }
+  .tile-value.teal  { color: var(--teal); }
+  .tile-value.amber { color: var(--amber); }
+  .tile-value.red   { color: var(--red); }
+  .tile-desc { font-size: 0.8rem; color: var(--text-2); line-height: 1.5; }
+
+  /* ── Bar chart ────────────────────────────────────────────────────── */
+  .bar-chart { display: flex; flex-direction: column; gap: 14px; }
+  .bar-row { display: flex; align-items: center; gap: 12px; }
+  .bar-label {
+    font-size: 0.82rem; color: var(--text-0);
+    width: 190px; flex-shrink: 0;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .bar-track { flex: 1; height: 8px; background: var(--border); border-radius: 4px; position: relative; overflow: hidden; }
+  .bar-fill { height: 100%; width: 0; border-radius: 4px; transition: width 1.2s cubic-bezier(0.16,1,0.3,1); }
+  .bar-val { font-size: 0.78rem; color: var(--text-2); width: 90px; text-align: right; flex-shrink: 0; font-variant-numeric: tabular-nums; }
+
+  /* ── Trend bar chart ──────────────────────────────────────────────── */
+  .trend-chart { display: flex; flex-direction: column; gap: 16px; }
+  .trend-label { font-size: 0.8rem; color: var(--text-2); margin-bottom: 4px; }
+  .trend-label strong { font-weight: 700; }
+  .trend-track { height: 28px; background: var(--border); border-radius: 4px; position: relative; display: flex; align-items: center; overflow: hidden; }
+  .trend-fill {
+    height: 100%; width: 0; border-radius: 4px;
+    transition: width 1.4s cubic-bezier(0.16,1,0.3,1);
+    display: flex; align-items: center; justify-content: flex-end; padding-right: 8px;
+  }
+  .trend-pct { font-size: 0.72rem; font-weight: 700; color: var(--bg-0); }
+
+  /* ── Line chart ───────────────────────────────────────────────────── */
+  .line-chart-svg { width: 100%; height: 220px; }
+
+  /* ── Results table ────────────────────────────────────────────────── */
+  .results-table {
+    width: 100%; border-collapse: collapse; margin-top: 32px;
+    font-size: 0.84rem;
+  }
+  .results-table thead tr { border-bottom: 2px solid var(--border-2); }
+  .results-table th {
+    text-align: left; padding: 10px 14px;
+    font-size: 0.68rem; font-weight: 600; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-2);
+  }
+  .results-table th.num { text-align: right; }
+  .results-table td { padding: 11px 14px; border-bottom: 1px solid var(--border); }
+  .results-table td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .results-table tbody tr:hover { background: var(--bg-2); }
+
+  /* ── Key insight callout ──────────────────────────────────────────── */
+  .insight-box {
+    background: linear-gradient(135deg, rgba(0,212,170,0.06) 0%, rgba(0,212,170,0.02) 100%);
+    border: 1px solid rgba(0, 212, 170, 0.3);
+    border-radius: 10px; padding: 32px 36px; margin-top: 40px;
+    position: relative; overflow: hidden;
+  }
+  .insight-box::before {
+    content: ''; position: absolute; top: 0; left: 0;
+    width: 3px; height: 100%; background: var(--teal);
+  }
+  .insight-box.warn {
+    background: linear-gradient(135deg, rgba(245,158,11,0.06) 0%, rgba(245,158,11,0.02) 100%);
+    border-color: rgba(245, 158, 11, 0.3);
+  }
+  .insight-box.warn::before { background: var(--amber); }
+  .insight-box.warn .insight-label { color: var(--amber); }
+  .insight-box.alert {
+    background: linear-gradient(135deg, rgba(239,68,68,0.06) 0%, rgba(239,68,68,0.02) 100%);
+    border-color: rgba(239, 68, 68, 0.3);
+  }
+  .insight-box.alert::before { background: var(--red); }
+  .insight-box.alert .insight-label { color: var(--red); }
+  .insight-label {
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--teal); margin-bottom: 12px;
+  }
+  .insight-text { font-size: 1.05rem; color: var(--text-0); line-height: 1.75; max-width: none; }
+
+  /* ── Data sources ─────────────────────────────────────────────────── */
+  .sources-row {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;
+    margin-top: 32px;
+  }
+  .source-card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 8px; padding: 18px 20px;
+  }
+  .source-label {
+    font-size: 0.68rem; color: var(--text-2); text-transform: uppercase;
+    letter-spacing: 0.08em; margin-bottom: 4px;
+  }
+  .source-name { font-size: 0.84rem; font-weight: 600; color: var(--text-0); margin-bottom: 2px; }
+  .source-meta { font-size: 0.76rem; color: var(--text-2); }
+
+  /* ── Tools row ────────────────────────────────────────────────────── */
+  .tools-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+  .tool-tag {
+    font-size: 0.75rem; font-family: var(--font-mono);
+    background: var(--bg-3); border: 1px solid var(--border-2);
+    padding: 4px 10px; border-radius: 4px; color: var(--text-1);
+  }
+
+  /* ── Chapter bridge / closer ──────────────────────────────────────── */
+  .bridge-section {
+    background: var(--bg-1); border-top: 1px solid var(--border);
+    padding: 88px 0;
+  }
+  .bridge-eyebrow {
+    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--text-2); margin-bottom: 8px;
+  }
+  .bridge-heading { font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 800; margin-bottom: 20px; }
+  .bridge-heading em { color: var(--teal); font-style: normal; display: block; }
+  .bridge-sub { font-size: 0.95rem; color: var(--text-1); max-width: 58ch; margin-bottom: 32px; }
+
+  .bridge-list { list-style: none; margin-bottom: 36px; display: flex; flex-direction: column; gap: 10px; }
+  .bridge-list li {
+    display: flex; align-items: baseline; gap: 10px;
+    font-size: 0.84rem; color: var(--text-1);
+  }
+  .bridge-list li::before {
+    content: '→'; color: var(--teal); font-weight: 700; flex-shrink: 0;
+  }
+
+  /* ── Chapter map ──────────────────────────────────────────────────── */
+  .chapter-map {
+    display: flex; flex-direction: column; gap: 8px; margin-top: 40px;
+    padding-top: 32px; border-top: 1px solid var(--border);
+  }
+  .ch-row {
+    display: flex; align-items: center; gap: 14px;
+    padding: 10px 14px; border-radius: 6px;
+    font-size: 0.82rem; color: var(--text-2);
+  }
+  .ch-row.current {
+    background: rgba(0, 212, 170, 0.06);
+    border: 1px solid rgba(0, 212, 170, 0.2);
+    color: var(--text-0);
+  }
+  .ch-row.done { color: var(--text-1); }
+  .ch-num {
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em;
+    width: 28px; flex-shrink: 0; font-family: var(--font-mono);
+  }
+  .ch-row.current .ch-num { color: var(--teal); }
+  .ch-row.done .ch-num    { color: var(--teal-dim); }
+  .ch-badge {
+    margin-left: auto; font-size: 0.68rem; padding: 2px 8px;
+    border-radius: 3px;
+  }
+  .badge-done    { background: rgba(0, 212, 170, 0.12); color: var(--teal); }
+  .badge-current { background: rgba(0, 212, 170, 0.12); color: var(--teal); }
+  .badge-planned { background: rgba(107, 122, 150, 0.12); color: var(--text-2); }
+
+  /* ── Footer ───────────────────────────────────────────────────────── */
+  .footer {
+    border-top: 1px solid var(--border); padding: 32px 0;
+    font-size: 0.78rem; color: var(--text-2);
+  }
+  .footer-inner {
+    max-width: 900px; margin: 0 auto; padding: 0 24px;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 12px;
+  }
+  .footer-links { display: flex; gap: 16px; }
+  .footer-links a { color: var(--text-2); font-size: 0.78rem; }
+  .footer-links a:hover { color: var(--teal); }
+
+  /* ── Responsive ───────────────────────────────────────────────────── */
+  @media (max-width: 680px) {
+    .counters       { grid-template-columns: 1fr; }
+    .two-col-grid   { grid-template-columns: 1fr; }
+    .tile-grid.cols-3, .tile-grid.cols-4 { grid-template-columns: 1fr 1fr; }
+    .sources-row    { grid-template-columns: 1fr; }
+    .nav-links      { display: none; }
+    .results-table  { font-size: 0.74rem; }
+    .bar-label      { width: 120px; }
+  }
+
+  /* ── Animations ───────────────────────────────────────────────────── */
+  .fade-in { opacity: 0; transform: translateY(18px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fade-in { opacity: 1; transform: none; transition: none; }
+    * { animation: none !important; }
+  }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- ── Nav ──────────────────────────────────────────────────────────── -->
+<nav>
+  <div class="nav-inner">
+    <span class="nav-brand">Canada Energy / Ch.1</span>
+    <ul class="nav-links">
+      <li><a href="#overview">Overview</a></li>
+      <li><a href="#sectors">Sectors</a></li>
+      <li><a href="#trends">Trends</a></li>
+      <li><a href="#intensity">GHG Intensity</a></li>
+      <li><a href="canada_energy_chapter2.html">Chapter 2</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ── Hero ─────────────────────────────────────────────────────────── -->
+<section class="hero" id="overview">
+  <div class="container">
+    <div class="hero-eyebrow">Data Analysis Portfolio · Chapter 1 of 4</div>
+    <h1>How does Canada<br><span>power itself today?</span></h1>
+    <p class="hero-sub">
+      A data-driven baseline of Canada's transportation energy landscape
+      from 2000 to 2023 — built from NRCan's Comprehensive Energy Use Database.
+      The foundation for modeling what EV adoption will break.
+    </p>
+
+    <div class="counters">
+      <div class="counter" id="c1">
+        <div class="counter-value amber" data-target="10.3" data-suffix="%" data-format="decimal1">0</div>
+        <div class="counter-label">Freight energy use growth<br>2013 → 2023</div>
+      </div>
+      <div class="counter" id="c2">
+        <div class="counter-value" data-target="23.1" data-suffix="%" data-format="decimal1">0</div>
+        <div class="counter-label">Drop in electricity GHG intensity<br>over the same decade</div>
+      </div>
+      <div class="counter" id="c3">
+        <div class="counter-value red" data-target="19.4" data-suffix="%" data-format="decimal1">0</div>
+        <div class="counter-label">Clean energy share in 2023 —<br>down from 21.1% in 2013</div>
+      </div>
+    </div>
+
+    <div class="dataset-band fade-in">
+      <div class="ds-item">
+        <span class="ds-label">Source</span>
+        <span class="ds-value">NRCan Comprehensive Energy Use Database</span>
+      </div>
+      <div class="ds-item">
+        <span class="ds-label">Rows</span>
+        <span class="ds-value">6,048 (long format)</span>
+      </div>
+      <div class="ds-item">
+        <span class="ds-label">Coverage</span>
+        <span class="ds-value">2000 – 2023, 125 categories</span>
+      </div>
+      <div class="ds-item">
+        <span class="ds-label">Sectors</span>
+        <span class="ds-value">Electricity, Freight, Passenger</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Overview ─────────────────────────────────────────────────────── -->
+<section>
+  <div class="container">
+    <div class="section-header fade-in">
+      <div class="section-eyebrow">Dataset</div>
+      <h2>6,048 rows. 24 years. 125 categories.</h2>
+      <p>
+        The NRCan Transportation Energy Use Database tracks energy consumption,
+        GHG emissions, intensity, and pricing across every major transportation
+        mode in Canada from 2000 to 2023.
+      </p>
+    </div>
+
+    <div class="two-col-grid">
+      <div class="info-card fade-in">
+        <div class="info-card-title">What's in the data</div>
+        <div class="bar-chart" id="metric-chart"></div>
+      </div>
+      <div class="info-card fade-in">
+        <div class="info-card-title">Data quality</div>
+        <div class="stat-block">
+          <div class="stat-block-label">Total rows</div>
+          <div class="stat-block-value">6,048</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-block-label">Year coverage</div>
+          <div class="stat-block-value">2000 <span style="color:var(--text-2);font-size:1.2rem;">→</span> 2023</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-block-label">Null values (handled)</div>
+          <div class="stat-block-value" style="color:var(--amber);">21.2%</div>
+          <div class="tile-desc" style="margin-top:4px;">Structural nulls from wide-format source sheets</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Sectors ──────────────────────────────────────────────────────── -->
+<section id="sectors">
+  <div class="container">
+    <div class="section-header fade-in">
+      <div class="section-eyebrow">Energy Use · 2023</div>
+      <h2>Where the energy goes</h2>
+      <p>
+        Total energy consumption by sector in the most recent year of data.
+        Electricity infrastructure leads, followed by freight — the sector
+        growing fastest.
+      </p>
+    </div>
+
+    <div class="info-card fade-in">
+      <div class="info-card-title">Energy use by sector — 2023 (normalized)</div>
+      <div class="bar-chart" id="sector-chart"></div>
+    </div>
+
+    <div class="insight-box warn fade-in">
+      <div class="insight-label">Key finding</div>
+      <p class="insight-text">
+        Freight is the second-largest energy consumer and the fastest-growing sector,
+        up <strong style="color:var(--amber)">10.3%</strong> over the decade. Light trucks and heavy trucks together
+        account for the bulk of that demand — and neither electrifies cheaply or easily.
+      </p>
+    </div>
+
+    <div class="section-header fade-in" style="margin-top:64px;">
+      <div class="section-eyebrow">GHG Emissions · 2023</div>
+      <h2>Who's emitting, and how much</h2>
+      <p>
+        GHG emissions by sector reveal a different story than energy use alone.
+        Total Transportation carries the heaviest emissions burden.
+      </p>
+    </div>
+
+    <div class="info-card fade-in">
+      <div class="info-card-title">GHG emissions by sector — 2023 (normalized)</div>
+      <div class="bar-chart" id="ghg-chart"></div>
+    </div>
+
+    <div class="insight-box alert fade-in">
+      <div class="insight-label">Watch this</div>
+      <p class="insight-text">
+        Total Transportation's GHG figure includes all sub-sectors, making it the
+        single largest emissions source in the dataset at <strong>2,010,626 kt CO₂e</strong>.
+        Passenger vehicles and freight trucks together explain why transportation
+        is Canada's largest source of greenhouse gas emissions nationally.
+      </p>
+    </div>
+
+    <div class="info-card fade-in" style="margin-top:40px;">
+      <div class="info-card-title">Top 10 categories by energy use — 2023</div>
+      <div class="bar-chart" id="top10-chart"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Trends ───────────────────────────────────────────────────────── -->
+<section id="trends">
+  <div class="container">
+    <div class="section-header fade-in">
+      <div class="section-eyebrow">Trend · 2013–2023</div>
+      <h2>A decade of divergence</h2>
+      <p>
+        Overall energy use rose <strong style="color:var(--text-0)">+3.7%</strong> from 2013 to 2023.
+        But that headline masks a split: freight grew aggressively while
+        electricity infrastructure actually declined slightly.
+      </p>
+    </div>
+
+    <div class="info-card fade-in">
+      <div class="info-card-title">Sector growth 2013 → 2023</div>
+      <div class="trend-chart" id="trend-chart"></div>
+    </div>
+
+    <div class="two-col-grid fade-in">
+      <div class="info-card">
+        <div class="insight-label" style="color:var(--amber);margin-bottom:8px;">Freight ↑ 10.3%</div>
+        <p style="color:var(--text-1);font-size:0.9rem;line-height:1.6;">
+          The most concerning trend in the dataset. Freight growth tracks
+          e-commerce expansion and supply chain intensification — a structural
+          shift, not a blip. Without electrification, this keeps climbing.
+        </p>
+      </div>
+      <div class="info-card">
+        <div class="insight-label" style="margin-bottom:8px;">Electricity ↓ 0.4%</div>
+        <p style="color:var(--text-1);font-size:0.9rem;line-height:1.6;">
+          A marginal decline in electricity sector energy use is a quiet
+          positive signal — efficiency gains and grid optimization are
+          having a measurable effect, even if small.
+        </p>
+      </div>
+    </div>
+
+    <div class="info-card fade-in" style="margin-top:40px;">
+      <div class="info-card-title">Clean energy share trend — 2013 to 2023</div>
+      <svg class="line-chart-svg" id="clean-svg" viewBox="0 0 900 220"
+           preserveAspectRatio="none"></svg>
+      <div class="insight-box alert" style="margin-top:24px;">
+        <div class="insight-label">The COVID distortion</div>
+        <p class="insight-text" style="font-size:0.95rem;">
+          Clean energy share spiked to <strong>22.1%</strong> in 2020 —
+          not because Canada got cleaner, but because overall demand
+          collapsed during COVID-19. By 2023 it had fallen back to
+          <strong>19.4%</strong>, lower than any year since 2013.
+          Demand is outpacing clean supply.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── GHG Intensity ────────────────────────────────────────────────── -->
+<section id="intensity">
+  <div class="container">
+    <div class="section-header fade-in">
+      <div class="section-eyebrow">GHG Intensity · 2013–2023</div>
+      <h2>The grid is cleaning up.<br>The roads are not.</h2>
+      <p>
+        GHG intensity measures emissions per unit of energy — a proxy for
+        how clean each sector's energy source is getting over time.
+      </p>
+    </div>
+
+    <div class="tile-grid cols-3 fade-in">
+      <div class="tile-card">
+        <div class="tile-label">Electricity</div>
+        <div class="tile-value teal">−23.1%</div>
+        <div class="tile-desc">
+          The single strongest signal in the dataset. Canada's grid is
+          meaningfully decarbonizing — renewables and nuclear are
+          displacing fossil generation.
+        </div>
+      </div>
+      <div class="tile-card">
+        <div class="tile-label">Passenger</div>
+        <div class="tile-value amber">+0.6%</div>
+        <div class="tile-desc">
+          Essentially flat. Fuel efficiency gains in cars and SUVs are
+          being cancelled out by the shift toward larger, heavier
+          vehicles and more kilometres driven.
+        </div>
+      </div>
+      <div class="tile-card">
+        <div class="tile-label">Freight</div>
+        <div class="tile-value red">+2.5%</div>
+        <div class="tile-desc">
+          Moving in the wrong direction. Heavier loads, longer hauls,
+          and minimal EV penetration in commercial trucking means
+          freight intensity is getting worse, not better.
+        </div>
+      </div>
+    </div>
+
+    <div class="insight-box fade-in">
+      <div class="insight-label">The core tension</div>
+      <p class="insight-text">
+        Canada's electricity grid is on a genuine decarbonization trajectory.
+        Its transportation network is not. Chapter 2 models what happens when
+        you connect these two systems — pushing EV adoption onto a grid
+        that isn't ready for the load.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ── Sources ──────────────────────────────────────────────────────── -->
+<section id="sources">
+  <div class="container">
+    <div class="section-header fade-in">
+      <div class="section-eyebrow">Data + methodology</div>
+      <h2>Public data. Transparent pipeline.</h2>
+      <p>
+        Every source here is publicly available. The pipeline runs in three
+        scripts: structural audit → cleaning → exploratory analysis.
+      </p>
+    </div>
+
+    <div class="sources-row fade-in">
+      <div class="source-card">
+        <div class="source-label">Transportation energy</div>
+        <div class="source-name">NRCan Comprehensive Energy Use Database</div>
+        <div class="source-meta">HB2023e.xls · energy, GHG, intensity by mode · 2000–2023</div>
+      </div>
+      <div class="source-card">
+        <div class="source-label">Electricity generation</div>
+        <div class="source-name">StatCan Table 25-10-0015-01</div>
+        <div class="source-meta">Monthly generation by type and province · 2008–present</div>
+      </div>
+    </div>
+
+    <div class="tools-row fade-in">
+      <span class="tool-tag">Python</span>
+      <span class="tool-tag">pandas</span>
+      <span class="tool-tag">matplotlib</span>
+      <span class="tool-tag">seaborn</span>
+      <span class="tool-tag">01_inspect.py</span>
+      <span class="tool-tag">02_clean.py</span>
+      <span class="tool-tag">03_eda.py</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── Chapter 2 bridge ─────────────────────────────────────────────── -->
+<div class="bridge-section" id="chapter2">
+  <div class="container">
+    <div class="bridge-eyebrow">What's next</div>
+    <h2 class="bridge-heading">The baseline is set.<br><em>What happens when Canada's roads go electric?</em></h2>
+    <p class="bridge-sub">
+      With the energy baseline established, Chapter 2 models EV adoption
+      rates across Canadian corridors and geographies — and stress-tests
+      the grid against the demand shock. These are the transportation
+      categories that will carry the most weight in that analysis:
+    </p>
+
+    <ul class="bridge-list">
+      <li>Light-duty gasoline vehicles — the largest single transport energy category</li>
+      <li>Light trucks &amp; SUVs — fastest-growing segment, lowest EV penetration</li>
+      <li>Heavy freight trucks — highest intensity growth, hardest to electrify</li>
+      <li>Urban transit — highest clean energy upside, already partially electric</li>
+    </ul>
+
+    <div class="chapter-map">
+      <div class="ch-row current">
+        <span class="ch-num">Ch.1</span>
+        <span>Energy baseline — Canada's transportation energy landscape, 2000–2023</span>
+        <span class="ch-badge badge-current">You are here</span>
+      </div>
+      <div class="ch-row">
+        <span class="ch-num">Ch.2</span>
+        <span>EV explosion — adoption modeling, demand projection, grid stress scoring</span>
+        <span class="ch-badge badge-done">✓ Complete</span>
+      </div>
+      <div class="ch-row">
+        <span class="ch-num">Ch.3</span>
+        <span>AI grid optimization — peak demand model + smart charging simulation</span>
+        <span class="ch-badge badge-done">✓ Complete</span>
+      </div>
+      <div class="ch-row">
+        <span class="ch-num">Ch.4</span>
+        <span>EV charging infrastructure equity — neighbourhood-level access gaps</span>
+        <span class="ch-badge badge-done">✓ Complete</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Footer ───────────────────────────────────────────────────────── -->
+<footer class="footer">
+  <div class="footer-inner">
+    <span>Built by <strong>Saeid Tayeban</strong> · York University · Toronto, ON</span>
+    <div class="footer-links">
+      <a href="https://oee.nrcan.gc.ca/corporate/statistics/neud/dpa/menus/trends/comprehensive_tables/list.cfm">NRCan Data</a>
+      <a href="https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=2510001501">StatCan 25-10-0015-01</a>
+      <a href="canada_energy_chapter2.html">Ch.2 →</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ── Data ────────────────────────────────────────────────────────────────────
+const data = {
+  sectors: [
+    { label: "Electricity",           value: 1285577.9, max: 1285577.9, color: "var(--teal)"  },
+    { label: "Freight",               value: 1014916.0, max: 1285577.9, color: "var(--amber)" },
+    { label: "Passenger",             value:  777551.4, max: 1285577.9, color: "var(--blue)"  },
+  ],
+  ghg: [
+    { label: "Total Transportation",  value: 2010626.8, max: 2010626.8, color: "var(--red)"   },
+    { label: "Passenger",             value:  545984.7, max: 2010626.8, color: "var(--amber)" },
+    { label: "Freight",               value:  359605.8, max: 2010626.8, color: "var(--blue)"  },
+  ],
+  top10: [
+    { label: "Production (GWh)",      value: 619979.8, max: 619979.8, color: "var(--teal)"  },
+    { label: "Rail",                  value: 437083.0, max: 619979.8, color: "var(--blue)"  },
+    { label: "Hydro",                 value: 358524.4, max: 619979.8, color: "var(--teal)"  },
+    { label: "Light Trucks",          value: 336289.7, max: 619979.8, color: "var(--amber)" },
+    { label: "Heavy Trucks",          value: 271278.6, max: 619979.8, color: "var(--amber)" },
+    { label: "Air",                   value: 228372.9, max: 619979.8, color: "var(--blue)"  },
+    { label: "Marine",                value: 214221.0, max: 619979.8, color: "var(--blue)"  },
+    { label: "Cars",                  value: 207677.1, max: 619979.8, color: "var(--amber)" },
+    { label: "Natural Gas",           value:  96077.0, max: 619979.8, color: "var(--text-2)" },
+    { label: "Nuclear",               value:  84977.7, max: 619979.8, color: "var(--teal)"  },
+  ],
+  metrics: [
+    { label: "Energy Use",     value: 100, max: 100, color: "var(--teal)"  },
+    { label: "GHG Emissions",  value: 100, max: 100, color: "var(--red)"   },
+    { label: "Intensity",      value: 100, max: 100, color: "var(--amber)" },
+    { label: "Price / Other",  value: 100, max: 100, color: "var(--blue)"  },
+  ],
+  trends: [
+    { sector: "Freight",     pct: 10.3, color: "var(--amber)" },
+    { sector: "Passenger",   pct:  2.7, color: "var(--blue)"  },
+    { sector: "Total",       pct:  3.7, color: "var(--text-2)" },
+    { sector: "Electricity", pct: -0.4, color: "var(--teal)"  },
+  ],
+  cleanShare: [
+    { year: 2013, pct: 21.1 }, { year: 2014, pct: 20.7 },
+    { year: 2015, pct: 20.3 }, { year: 2016, pct: 20.1 },
+    { year: 2017, pct: 19.7 }, { year: 2018, pct: 19.4 },
+    { year: 2019, pct: 19.0 }, { year: 2020, pct: 22.1 },
+    { year: 2021, pct: 21.6 }, { year: 2022, pct: 20.8 },
+    { year: 2023, pct: 19.4 },
+  ],
+};
+
+// ── Build bar chart ──────────────────────────────────────────────────────────
+function buildBarChart(containerId, items, formatter) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  items.forEach(item => {
+    const pct = (item.value / item.max * 100).toFixed(1);
+    const row = document.createElement("div");
+    row.className = "bar-row";
+    row.innerHTML = `
+      <div class="bar-label">${item.label}</div>
+      <div class="bar-track">
+        <div class="bar-fill" data-width="${pct}" style="background:${item.color};"></div>
+      </div>
+      <div class="bar-val">${formatter ? formatter(item.value) : item.value}</div>
+    `;
+    el.appendChild(row);
+  });
+}
+
+function fmtK(v) {
+  if (v >= 1e6) return (v/1e6).toFixed(2) + "M";
+  if (v >= 1e3) return (v/1e3).toFixed(0) + "K";
+  return v.toFixed(0);
+}
+
+buildBarChart("sector-chart", data.sectors, fmtK);
+buildBarChart("ghg-chart",    data.ghg,     fmtK);
+buildBarChart("top10-chart",  data.top10,   fmtK);
+buildBarChart("metric-chart", data.metrics, () => "✓ present");
+
+// ── Build trend chart ────────────────────────────────────────────────────────
+function buildTrendChart() {
+  const el = document.getElementById("trend-chart");
+  if (!el) return;
+  const maxAbs = Math.max(...data.trends.map(t => Math.abs(t.pct)));
+  data.trends.forEach(item => {
+    const row = document.createElement("div");
+    const isNeg = item.pct < 0;
+    const widthPct = (Math.abs(item.pct) / maxAbs * 100).toFixed(1);
+    row.innerHTML = `
+      <div class="trend-label">${item.sector} &nbsp;
+        <strong style="color:${item.color};">
+          ${item.pct > 0 ? "+" : ""}${item.pct}%
+        </strong>
+      </div>
+      <div class="trend-track">
+        <div class="trend-fill" data-width="${widthPct}"
+             style="background:${item.color};${isNeg ? "opacity:0.5" : ""}">
+          <span class="trend-pct">${Math.abs(item.pct)}%</span>
+        </div>
+      </div>
+    `;
+    el.appendChild(row);
+  });
+}
+buildTrendChart();
+
+// ── Build SVG line chart ─────────────────────────────────────────────────────
+function buildLineSVG() {
+  const svg = document.getElementById("clean-svg");
+  if (!svg) return;
+
+  const W = 900, H = 220, pad = { t: 20, r: 20, b: 40, l: 50 };
+  const iW = W - pad.l - pad.r;
+  const iH = H - pad.t - pad.b;
+  const pts = data.cleanShare;
+  const minY = 15, maxY = 25;
+
+  function sx(i) { return pad.l + (i / (pts.length - 1)) * iW; }
+  function sy(v) { return pad.t + iH - ((v - minY) / (maxY - minY)) * iH; }
+
+  [16,18,20,22,24].forEach(y => {
+    const yy = sy(y);
+    svg.innerHTML += `<line x1="${pad.l}" y1="${yy}" x2="${W - pad.r}" y2="${yy}"
+      stroke="#1e2d45" stroke-width="1"/>
+      <text x="${pad.l - 8}" y="${yy + 4}" text-anchor="end"
+        font-size="11" fill="#6b7a96" font-family="Inter,sans-serif">${y}%</text>`;
+  });
+
+  let areaPath = `M ${sx(0)} ${sy(pts[0].pct)}`;
+  pts.forEach((p, i) => { if (i > 0) areaPath += ` L ${sx(i)} ${sy(p.pct)}`; });
+  areaPath += ` L ${sx(pts.length-1)} ${H - pad.b} L ${sx(0)} ${H - pad.b} Z`;
+  svg.innerHTML += `<defs>
+    <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#00d4aa" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#00d4aa" stop-opacity="0.01"/>
+    </linearGradient></defs>
+    <path d="${areaPath}" fill="url(#areaGrad)"/>`;
+
+  let linePath = `M ${sx(0)} ${sy(pts[0].pct)}`;
+  pts.forEach((p, i) => { if (i > 0) linePath += ` L ${sx(i)} ${sy(p.pct)}`; });
+  svg.innerHTML += `<path d="${linePath}" fill="none" stroke="#00d4aa" stroke-width="2.5"/>`;
+
+  const covid = pts.findIndex(p => p.year === 2020);
+  svg.innerHTML += `
+    <line x1="${sx(covid)}" y1="${pad.t}" x2="${sx(covid)}" y2="${H - pad.b}"
+      stroke="#ef4444" stroke-width="1" stroke-dasharray="4,3"/>
+    <text x="${sx(covid) + 6}" y="${pad.t + 14}"
+      font-size="11" fill="#ef4444" font-family="Inter,sans-serif" font-weight="600">COVID spike</text>`;
+
+  pts.forEach((p, i) => {
+    svg.innerHTML += `<circle cx="${sx(i)}" cy="${sy(p.pct)}" r="4"
+      fill="#00d4aa" stroke="#07090f" stroke-width="2"/>`;
+    if (i % 2 === 0 || i === pts.length - 1) {
+      svg.innerHTML += `<text x="${sx(i)}" y="${H - pad.b + 18}" text-anchor="middle"
+        font-size="11" fill="#6b7a96" font-family="Inter,sans-serif">${p.year}</text>`;
+    }
+  });
+}
+buildLineSVG();
+
+// ── Counter animation ──────────────────────────────────────────────────────
+function animateCounter(el) {
+  if (el.dataset.animated === 'true') return;
+  el.dataset.animated = 'true';
+
+  const format   = el.dataset.format || '';
+  const target   = format === 'decimal1' ? parseFloat(el.dataset.target) : parseInt(el.dataset.target, 10);
+  const suffix   = el.dataset.suffix || '';
+  const duration = 1800;
+  const start    = performance.now();
+
+  function tick(now) {
+    const elapsed = now - start;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const raw = eased * target;
+    const value = format === 'decimal1' ? raw.toFixed(1)
+      : format === 'comma' ? Math.round(raw).toLocaleString('en-CA')
+      : Math.round(raw);
+    el.textContent = value + suffix;
+    if (progress < 1) requestAnimationFrame(tick);
+    else el.closest('.counter').classList.add('active');
+  }
+  requestAnimationFrame(tick);
+}
+
+// Hero counters are always above the fold on load — animate them directly
+// instead of waiting on IntersectionObserver (some browsers never fire the
+// initial callback for elements already in view when observation starts).
+document.querySelectorAll('.counter-value').forEach(el => animateCounter(el));
+
+// ── Intersection observer for scroll reveals ────────────────────────────────
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    entry.target.classList.add('visible');
+    io.unobserve(entry.target);
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.fade-in').forEach(el => io.observe(el));
+
+// ── Reveal bar/trend fills once their card scrolls into view ───────────────
+const barIo = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    entry.target.querySelectorAll('.bar-fill[data-width], .trend-fill[data-width]').forEach(bar => {
+      bar.style.width = bar.dataset.width + '%';
+    });
+    barIo.unobserve(entry.target);
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.info-card').forEach(el => barIo.observe(el));
+</script>
+
+</body>
+</html>
